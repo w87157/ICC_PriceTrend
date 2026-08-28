@@ -1,0 +1,61 @@
+## Visual Studio 官方建議排除規範
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Visual Studio Code 專屬暫存資料夾
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet Packages
+*.nupkg
+# NuGet 自動下載的套件目錄
+**/packages/*
+!**/packages/build/
+!**/packages/repositories.config
+
+# Publishing and package deployment
+*.publishsettings
+*.pubxml
+*.pubxml.user
+
+# Client-side dependency management (前端套件管理)
+node_modules/
+bower_components/
+
+# Test result directory
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# SQL Server Express / LocalDB database files
+*.mdf
+*.ldf
+
+# Environment and secrets (敏感設定檔與金鑰)
+appsettings.Development.json
+appsettings.Production.json
+*.env
