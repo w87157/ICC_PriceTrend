@@ -28,13 +28,6 @@ app.MapStaticAssets();
 // =========================================================
 // 3. 路由配置區 (Routing Configuration)
 // =========================================================
-// 後臺路由
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
-// 前台路由
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
