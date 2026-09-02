@@ -1,50 +1,389 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PriceTrend</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PriceTrend.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - ICC_PriceTrend</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="" name="keywords" />
+    <meta content="" name="description" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap"
+          rel="stylesheet" />
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
+          rel="stylesheet" />
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/home/animate/animate.min.css" rel="stylesheet" />
+    <link href="~/lib/home/owlcarousel/assets/owl.carousel.min.css"
+          rel="stylesheet" />
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/home/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/home/style.css" rel="stylesheet" />
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PriceTrend</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <!-- Spinner Start -->
+    <div id="spinner"
+         class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary"
+             style="width: 3rem; height: 3rem"
+             role="status">
+            <span class="sr-only">載入中...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+    <!-- Brand / Search Start -->
+    <div class="container-fluid px-5 py-4">
+        <div class="row gx-0 align-items-center">
+            <div class="col-lg-3 text-center text-lg-start mb-3 mb-lg-0">
+                <a href="/" class="navbar-brand p-0">
+                    <h1 class="display-6 text-primary m-0">
+                        <i class="fas fa-chart-line text-secondary me-2"></i>
+                        比價期趨 PriceTrend
+                    </h1>
+                    <small class="text-muted ms-1">智慧比價．掌握價格趨勢</small>
+                </a>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="px-lg-4">
+                    <div class="d-flex border rounded-pill overflow-hidden">
+                        <select class="form-select text-dark border-0 rounded-0"
+                                style="max-width: 150px"
+                                aria-label="搜尋分類">
+                            <option selected>全部分類</option>
+                            <option>電腦與零組件</option>
+                            <option>手機與平板</option>
+                            <option>影音設備</option>
+                            <option>周邊配件</option>
+                        </select>
+
+                        <input class="form-control border-0 border-start rounded-0 py-3"
+                               type="search"
+                               placeholder="搜尋商品名稱、品牌或型號，例如：iPhone 17 Pro"
+                               aria-label="商品搜尋" />
+
+                        <button type="button"
+                                class="btn btn-primary rounded-0 px-4 text-nowrap"
+                                style="min-width: 90px; white-space: nowrap">
+                            <i class="fas fa-search me-1"></i>搜尋
+                        </button>
+                    </div>
+
+                    <div class="mt-2 ms-3">
+                        <small class="text-muted me-2">熱門搜尋：</small>
+                        <a href="#" class="text-muted me-3">iPhone</a>
+                        <a href="#" class="text-muted me-3">RTX 顯示卡</a>
+                        <a href="#" class="text-muted me-3">MacBook</a>
+                        <a href="#" class="text-muted">Switch 2</a>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - PriceTrend - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="col-lg-2 text-center text-lg-end mt-3 mt-lg-0">
+                <!-- 收藏 -->
+                <a href="#"
+                   class="d-inline-flex align-items-center text-muted me-3"
+                   title="我的收藏">
+                    <span class="rounded-circle btn-md-square border">
+                        <i class="fas fa-heart"></i>
+                    </span>
+                </a>
+
+                <!-- 降價通知 -->
+                <a href="#"
+                   class="d-inline-flex align-items-center text-muted me-3"
+                   title="降價通知">
+                    <span class="rounded-circle btn-md-square border">
+                        <i class="fas fa-bell"></i>
+                    </span>
+                </a>
+
+                <!-- 會員 -->
+                <a href="#"
+                   class="d-inline-flex align-items-center text-muted"
+                   title="會員中心">
+                    <span class="rounded-circle btn-md-square border">
+                        <i class="fas fa-user"></i>
+                    </span>
+                </a>
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    </div>
+    <!-- Brand / Search End -->
+    <!-- Navbar Start -->
+    <div class="container-fluid nav-bar p-0">
+        <div class="row gx-0 bg-primary px-5 align-items-center">
+            <!-- Categories -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <nav class="navbar navbar-light position-relative"
+                     style="width: 250px">
+                    <button class="navbar-toggler border-0 fs-4 w-100 px-0 text-start"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#allCat">
+                        <h4 class="m-0">
+                            <i class="fa fa-bars me-2"></i>
+                            商品分類
+                        </h4>
+                    </button>
+
+                    <div class="collapse navbar-collapse rounded-bottom" id="allCat">
+                        <div class="navbar-nav ms-auto py-0">
+                            <ul class="list-unstyled categories-bars">
+                                <li>
+                                    <div class="categories-bars-item">
+                                        <a href="#">電腦與零組件</a>
+                                        <span><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="categories-bars-item">
+                                        <a href="#">手機與平板</a>
+                                        <span><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="categories-bars-item">
+                                        <a href="#">筆記型電腦</a>
+                                        <span><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="categories-bars-item">
+                                        <a href="#">影音與遊戲</a>
+                                        <span><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <div class="categories-bars-item">
+                                        <a href="#">周邊與配件</a>
+                                        <span><i class="fas fa-chevron-right"></i></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Navigation -->
+            <div class="col-12 col-lg-9">
+                <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+                    <a href="/" class="navbar-brand d-block d-lg-none">
+                        <h1 class="display-6 text-secondary m-0">
+                            <i class="fas fa-chart-line text-white me-2"></i>
+                            ICC PriceTrend
+                        </h1>
+                    </a>
+
+                    <button class="navbar-toggler ms-auto"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars fa-1x"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <div class="navbar-nav ms-auto py-0">
+                            <a href="/" class="nav-item nav-link active"> 首頁 </a>
+
+                            <a href="#" class="nav-item nav-link"> 商品比價 </a>
+
+                            <a href="#" class="nav-item nav-link"> 價格趨勢 </a>
+
+                            <a href="#" class="nav-item nav-link"> 歷史低價 </a>
+
+                            <div class="nav-item dropdown">
+                                <a href="#"
+                                   class="nav-link dropdown-toggle"
+                                   data-bs-toggle="dropdown">
+                                    探索
+                                </a>
+
+                                <div class="dropdown-menu m-0">
+                                    <a href="#" class="dropdown-item">熱門商品</a>
+                                    <a href="#" class="dropdown-item">熱門品牌</a>
+                                    <a href="#" class="dropdown-item">近期降價</a>
+                                    <a href="#" class="dropdown-item">價格排行榜</a>
+                                </div>
+                            </div>
+
+                            <a href="#" class="nav-item nav-link me-2"> 關於我們 </a>
+                        </div>
+
+                        <a href="#"
+                           class="btn btn-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0">
+                            <i class="fas fa-bell me-2"></i>
+                            設定降價通知
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+    @RenderBody()
+
+    <!-- Footer Start -->
+    <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+        <div class="container py-5">
+            <div class="row g-4 rounded mb-5"
+                 style="background: rgba(255, 255, 255, 0.03)">
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="rounded p-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                             style="width: 70px; height: 70px">
+                            <i class="fas fa-map-marker-alt fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white">公司地址</h4>
+                            <p class="mb-2">台北市南港區忠孝東路七段 123 號</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="rounded p-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                             style="width: 70px; height: 70px">
+                            <i class="fas fa-envelope fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white">電子郵件</h4>
+                            <p class="mb-2">info@example.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="rounded p-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                             style="width: 70px; height: 70px">
+                            <i class="fa fa-phone-alt fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white">聯絡電話</h4>
+                            <p class="mb-2">(02) 2345-6789</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="rounded p-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-4"
+                             style="width: 70px; height: 70px">
+                            <i class="fab fa-firefox-browser fa-2x text-primary"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white">官方網站</h4>
+                            <p class="mb-2">www.yoursite.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="footer-item d-flex flex-column">
+                        <div class="footer-item">
+                            <h4 class="text-primary mb-4">訂閱電子報</h4>
+                            <p class="mb-3">
+                                訂閱我們的電子報，即時獲取最新商品資訊、獨家優惠與特別活動通知。
+                            </p>
+                            <div class="position-relative mx-auto rounded-pill">
+                                <input class="form-control rounded-pill w-100 py-3 ps-4 pe-5"
+                                       type="text"
+                                       placeholder="請輸入您的 Email" />
+                                <button type="button"
+                                        class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">
+                                    免費訂閱
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="footer-item d-flex flex-column">
+                        <h4 class="text-primary mb-4">客戶服務</h4>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 聯絡我們</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 退換貨政策</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 歷史訂單記錄</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 網站地圖</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 顧客好評</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 會員帳戶專區</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 取消訂閱通知</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="footer-item d-flex flex-column">
+                        <h4 class="text-primary mb-4">相關資訊</h4>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 關於我們</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 配送資訊</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 隱私權政策</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 服務條款</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 商品保固</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 常見問題 FAQ</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 賣家登入</a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 col-xl-3">
+                    <div class="footer-item d-flex flex-column">
+                        <h4 class="text-primary mb-4">更多服務</h4>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 合作品牌</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 禮品券</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 分銷計畫</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 追蹤清單</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 購物紀錄</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 訂單進度查詢</a>
+                        <a href="#"><i class="fas fa-angle-right me-2"></i> 物流狀態追蹤</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright py-4">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-md-0">
+                    <span class="text-white">
+                        <a href="#" class="border-bottom text-white"><i class="fas fa-copyright text-light me-2"></i>您的網站名稱</a>，保留所有權利。
+                    </span>
+                </div>
+                <div class="col-md-6 text-center text-md-end text-white">
+                    網頁設計：
+                    <a class="border-bottom text-white" href="https://htmlcodex.com">HTML Codex</a>
+                    ｜ 發行單位：
+                    <a class="border-bottom text-white" href="https://themewagon.com">ThemeWagon</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary btn-lg-square back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/home/wow/wow.min.js"></script>
+    <script src="~/lib/home/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="~/js/home/main.js"></script>
 </body>
 </html>
