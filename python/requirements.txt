@@ -1,0 +1,6 @@
+pyodbc
+pandas
+undetected-chromedriver
+beautifulsoup4
+selenium
+python-dotenv
