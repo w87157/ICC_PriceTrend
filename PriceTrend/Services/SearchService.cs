@@ -12,7 +12,7 @@ namespace PriceTrend.Services
             _configuration = configuration;
         }
 
-        public async Task<List<SearchResultViewModel>> SearchAsync(string? keyword, string? category)
+        public async Task<List<SearchResultViewModel>> SearchAsync(string? keyword)
         {
             var results = new List<SearchResultViewModel>();
             var connectionString = _configuration.GetConnectionString("PriceTrend");

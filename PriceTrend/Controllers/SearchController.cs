@@ -13,9 +13,9 @@ namespace PriceTrend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? keyword, string? category)
+        public async Task<IActionResult> Index(string? keyword)
         {
-            var result = await _searchService.SearchAsync(keyword, category);
+            var result = await _searchService.SearchAsync(keyword);
 
             return View(result);
         }

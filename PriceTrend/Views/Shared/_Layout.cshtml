@@ -49,7 +49,7 @@
                 <a href="/" class="navbar-brand p-0">
                     <h1 class="display-6 text-primary m-0">
                         <i class="fas fa-chart-line text-secondary me-2"></i>
-                        比價期趨 PriceTrend
+                        比價期趨
                     </h1>
                     <small class="text-muted ms-1">智慧比價．掌握價格趨勢</small>
                 </a>
@@ -57,17 +57,16 @@
 
             <div class="col-lg-7">
                 <div class="px-lg-4">
-                    <form asp-controller="Search" asp-action="Index" method="get">
+                    <form asp-controller="Search" asp-action="Index" method="get" onsubmit="return validateSearch();">
                         <div class="d-flex border rounded-pill overflow-hidden">
-                            <select name="category" class="form-select text-dark border-0 rounded-0" style="max-width: 150px" aria-label="搜尋分類">
-                                <option value="">全部分類</option>
-                                <option value="電腦與零組件">電腦與零組件</option>
-                                <option value="手機與平板">手機與平板</option>
-                                <option value="影音設備">影音設備</option>
-                                <option value="周邊配件">周邊配件</option>
-                            </select>
-
-                            <input name="keyword" class="form-control border-0 border-start rounded-0 py-3" type="search" placeholder="搜尋商品名稱、品牌或型號，例如：iPhone 17 Pro" aria-label="商品搜尋" />
+                            <input 
+                                name="keyword"
+                                id="searchKeyword"
+                                class="form-control border-0 border-start rounded-0 py-3"
+                                type="search"
+                                value="@Context.Request.Query["keyword"]"
+                                placeholder="請輸入商品關鍵字..."
+                                aria-label="商品搜尋" />
 
                             <button type="submit" class="btn btn-primary rounded-0 px-4 text-nowrap" style="min-width: 90px; white-space: nowrap">
                                 <i class="fas fa-search me-1"></i>搜尋
@@ -119,65 +118,8 @@
     <!-- Navbar Start -->
     <div class="container-fluid nav-bar p-0">
         <div class="row gx-0 bg-primary px-5 align-items-center">
-            <!-- Categories -->
-            <div class="col-lg-3 d-none d-lg-block">
-                <nav class="navbar navbar-light position-relative"
-                     style="width: 250px">
-                    <button class="navbar-toggler border-0 fs-4 w-100 px-0 text-start"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#allCat">
-                        <h4 class="m-0">
-                            <i class="fa fa-bars me-2"></i>
-                            商品分類
-                        </h4>
-                    </button>
-
-                    <div class="collapse navbar-collapse rounded-bottom" id="allCat">
-                        <div class="navbar-nav ms-auto py-0">
-                            <ul class="list-unstyled categories-bars">
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">電腦與零組件</a>
-                                        <span><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">手機與平板</a>
-                                        <span><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">筆記型電腦</a>
-                                        <span><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">影音與遊戲</a>
-                                        <span><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <div class="categories-bars-item">
-                                        <a href="#">周邊與配件</a>
-                                        <span><i class="fas fa-chevron-right"></i></span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </nav>
-            </div>
-
             <!-- Main Navigation -->
-            <div class="col-12 col-lg-9">
+            <div class="col-12">
                 <nav class="navbar navbar-expand-lg navbar-light bg-primary">
                     <a href="/" class="navbar-brand d-block d-lg-none">
                         <h1 class="display-6 text-secondary m-0">
@@ -196,11 +138,8 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="navbar-nav ms-auto py-0">
                             <a href="/" class="nav-item nav-link active"> 首頁 </a>
-
                             <a href="#" class="nav-item nav-link"> 商品比價 </a>
-
                             <a href="#" class="nav-item nav-link"> 價格趨勢 </a>
-
                             <a href="#" class="nav-item nav-link"> 歷史低價 </a>
 
                             <div class="nav-item dropdown">
@@ -373,6 +312,17 @@
     </a>
 
     <!-- JavaScript Libraries -->
+    <script>
+        function validateSearch() {
+            const keyword = document.getElementById("searchKeyword").value.trim();
+
+            if (keyword === "") {
+                return false;
+            }
+
+            return true;
+        }
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/home/wow/wow.min.js"></script>
