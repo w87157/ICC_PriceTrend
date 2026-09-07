@@ -313,10 +313,10 @@ def main():
     df = df.drop_duplicates(subset=["link"]).reset_index(drop=True)
     print(f"去除重複後剩下 {len(df)} 筆商品")
     
-    # df.to_csv("coupang_products.csv", index=False, encoding="utf-8-sig")
-    # print("CSV 備份完成： coupang_products.csv")
+    df.to_csv("coupang_products.csv", index=False, encoding="utf-8-sig")
+    print("CSV 備份完成： coupang_products.csv")
     
-    save_to_database(df.to_dict("records"))
+    # save_to_database(df.to_dict("records"))
     
     
 # =========================================================

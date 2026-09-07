@@ -57,28 +57,23 @@
 
             <div class="col-lg-7">
                 <div class="px-lg-4">
-                    <div class="d-flex border rounded-pill overflow-hidden">
-                        <select class="form-select text-dark border-0 rounded-0"
-                                style="max-width: 150px"
-                                aria-label="搜尋分類">
-                            <option selected>全部分類</option>
-                            <option>電腦與零組件</option>
-                            <option>手機與平板</option>
-                            <option>影音設備</option>
-                            <option>周邊配件</option>
-                        </select>
+                    <form asp-controller="Search" asp-action="Index" method="get">
+                        <div class="d-flex border rounded-pill overflow-hidden">
+                            <select name="category" class="form-select text-dark border-0 rounded-0" style="max-width: 150px" aria-label="搜尋分類">
+                                <option value="">全部分類</option>
+                                <option value="電腦與零組件">電腦與零組件</option>
+                                <option value="手機與平板">手機與平板</option>
+                                <option value="影音設備">影音設備</option>
+                                <option value="周邊配件">周邊配件</option>
+                            </select>
 
-                        <input class="form-control border-0 border-start rounded-0 py-3"
-                               type="search"
-                               placeholder="搜尋商品名稱、品牌或型號，例如：iPhone 17 Pro"
-                               aria-label="商品搜尋" />
+                            <input name="keyword" class="form-control border-0 border-start rounded-0 py-3" type="search" placeholder="搜尋商品名稱、品牌或型號，例如：iPhone 17 Pro" aria-label="商品搜尋" />
 
-                        <button type="button"
-                                class="btn btn-primary rounded-0 px-4 text-nowrap"
-                                style="min-width: 90px; white-space: nowrap">
-                            <i class="fas fa-search me-1"></i>搜尋
-                        </button>
-                    </div>
+                            <button type="submit" class="btn btn-primary rounded-0 px-4 text-nowrap" style="min-width: 90px; white-space: nowrap">
+                                <i class="fas fa-search me-1"></i>搜尋
+                            </button>
+                        </div>
+                    </form>
 
                     <div class="mt-2 ms-3">
                         <small class="text-muted me-2">熱門搜尋：</small>

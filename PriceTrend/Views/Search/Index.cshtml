@@ -1,0 +1,65 @@
+﻿@model List<PriceTrend.Models.Product.SearchResultViewModel>
+
+@{
+    ViewData["Title"] = "搜尋結果";
+}
+
+<div class="container py-5">
+
+    <h2 class="mb-4">搜尋結果</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-secondary">
+            找不到符合的商品。
+        </div>
+    }
+    else
+    {
+        <p class="text-muted mb-4">
+            共找到 @Model.Count 筆商品
+        </p>
+
+        <div class="row g-3">
+
+            @foreach (var item in Model)
+            {
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @item.ItemName
+                            </h5>
+
+                            @if (!string.IsNullOrWhiteSpace(item.Brand))
+                            {
+                                <p class="mb-1">
+                                    品牌：@item.Brand
+                                </p>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(item.Model))
+                            {
+                                <p class="mb-1">
+                                    型號：@item.Model
+                                </p>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(item.MainImageUrl))
+                            {
+                                <p class="mb-0">
+                                    圖片：
+                                    @item.MainImageUrl
+                                </p>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
