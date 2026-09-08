@@ -1,3 +1,4 @@
+@model List<PriceTrend.Models.Product.PlatformItem>
 <!doctype html>
 <html lang="en">
   <head>
@@ -124,7 +125,7 @@
           <div class="d-inline-flex align-items-center">
             <a href="" class="navbar-brand p-0">
               <h1 class="display-5 text-primary m-0">
-                <i class="fas fa-shopping-bag text-secondary me-2"></i>Electro
+                <i class="fas fa-shopping-bag text-secondary me-2"></i>比價期趨
               </h1>
               <!-- <img src="~/lib/home/img/logo.png" alt="Logo"> -->
             </a>
@@ -132,31 +133,23 @@
         </div>
         <div class="col-md-4 col-lg-6 text-center">
           <div class="position-relative ps-4">
-            <div class="d-flex border rounded-pill">
-              <input
-                class="form-control border-0 rounded-pill w-100 py-3"
-                type="text"
-                data-bs-target="#dropdownToggle123"
-                placeholder="正在搜尋什麼商品？"
-              />
-              <select
-                class="form-select text-dark border-0 border-start rounded-0 p-3"
-                style="width: 200px"
-              >
-                <option value="All Category">所有分類</option>
-                <option value="Pest Control-2">分類 1</option>
-                <option value="Pest Control-3">分類 2</option>
-                <option value="Pest Control-4">分類 3</option>
-                <option value="Pest Control-5">分類 4</option>
-              </select>
-              <button
-                type="button"
-                class="btn btn-primary rounded-pill py-3 px-5"
-                style="border: 0"
-              >
-                <i class="fas fa-search"></i>
-              </button>
-            </div>
+            <form asp-controller="Product"
+                  asp-action="Search"
+                  method="get">
+
+                <div class="d-flex border rounded-pill">
+                    <input class="form-control border-0 rounded-pill w-100 py-3"
+                           type="text"
+                           name="keyword"
+                           placeholder="正在搜尋什麼商品？" />
+
+                    <button type="submit"
+                            class="btn btn-primary rounded-pill py-3 px-5"
+                            style="border:0">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
           </div>
         </div>
         <div class="col-md-4 col-lg-3 text-center text-lg-end">
@@ -260,8 +253,8 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
               <div class="navbar-nav ms-auto py-0">
-                <a href="index.html" class="nav-item nav-link active">首頁</a>
-                <a href="shop.html" class="nav-item nav-link">商店</a>
+                <a href="index" class="nav-item nav-link active">首頁</a>
+                <a href="shop" class="nav-item nav-link">商店</a>
                 <a href="single.html" class="nav-item nav-link">商品單頁</a>
                 <div class="nav-item dropdown">
                   <a

@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using PriceTrend.Services;
 
 namespace PriceTrend.Controllers
 {
-    public class ProductController : Controller
+    public class ShopController : Controller
     {
-        private readonly IComparisonService _comparisonService;
+        // 若使用 /Shop 預設路徑，轉到 Shop action
+        private readonly ComparisonService _comparisonService;
 
-        public ProductController(IComparisonService comparisonService)
+        public ShopController(ComparisonService comparisonService)
         {
             _comparisonService = comparisonService;
         }
