@@ -20,7 +20,7 @@ namespace PriceTrend.Services
 
         {
             List<PlatformItem> Platformitems = new List<PlatformItem>();
-            var connectionString = _configuration.GetConnectionString("DefaultConnection");
+            var connectionString = _configuration.GetConnectionString("PriceTrend");
 
             if (string.IsNullOrWhiteSpace(connectionString))
             {

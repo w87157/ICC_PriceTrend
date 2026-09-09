@@ -5,17 +5,16 @@ namespace PriceTrend.Controllers
 {
     public class ShopController : Controller
     {
-        // 若使用 /Shop 預設路徑，轉到 Shop action
-        private readonly ComparisonService _comparisonService;
+        private readonly SearchService _searchService;
 
-        public ShopController(ComparisonService comparisonService)
+        public ShopController(SearchService searchService)
         {
-            _comparisonService = comparisonService;
+            _searchService = searchService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? keyword)
         {
-            var products = _comparisonService.GetAllProducts();
+            var products = _searchService.Search(keyword);
 
             return View(products);
         }

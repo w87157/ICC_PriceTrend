@@ -13,11 +13,14 @@ namespace PriceTrend.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(string? keyword)
+        public IActionResult Index(string keyword)
         {
-            var result = await _searchService.SearchAsync(keyword);
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                return RedirectToAction("Index", "Shop");
+            }
 
-            return View(result);
+            return RedirectToAction("Index", "Shop", new { keyword = keyword });
         }
     }
 }

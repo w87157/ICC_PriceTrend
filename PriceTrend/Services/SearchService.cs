@@ -12,7 +12,7 @@ namespace PriceTrend.Services
             _configuration = configuration;
         }
 
-        public async Task<List<SearchResultViewModel>> SearchAsync(string? keyword)
+        public List<SearchResultViewModel> Search(string? keyword)
         {
             var results = new List<SearchResultViewModel>();
             var connectionString = _configuration.GetConnectionString("PriceTrend");
@@ -34,16 +34,16 @@ namespace PriceTrend.Services
                 ORDER BY ItemName;
             """;
 
-            await using var connection = new SqlConnection(connectionString);
-            await connection.OpenAsync();
-            await using var command = new SqlCommand(sql, connection);
+            using var connection = new SqlConnection(connectionString);
+            connection.Open();
+            using var command = new SqlCommand(sql, connection);
 
             var searchKeyword = keyword?.Trim() ?? "";
             command.Parameters.AddWithValue("@Keyword", searchKeyword);
             command.Parameters.AddWithValue("@KeywordPattern", $"%{searchKeyword}%");
 
-            await using var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
             {
                 results.Add(new SearchResultViewModel
                 {
