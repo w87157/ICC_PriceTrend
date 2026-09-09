@@ -544,28 +544,48 @@
                          class="tab-pane fade show p-0 active">
 
                         <div class="row g-4 product">
-                            
-                            @* @foreach (var PlatformItem in Model)
+                            @foreach (var item in Model)
                             {
                                 <div class="col-lg-4">
                                     <div class="product-item">
 
-                                        @PlatformItem.MainImageUrl
+                                        @if (!string.IsNullOrWhiteSpace(item.MainImageUrl))
+                                        {
+                                            <img src="@item.MainImageUrl"
+                                                 class="img-fluid w-100"
+                                                 alt="@item.ItemName">
+                                        }
 
                                         <div class="text-center p-4">
                                             <h5>
-                                                @PlatformItem.PlatformItemName
+                                                @item.ItemName
                                             </h5>
 
+                                            @if (!string.IsNullOrWhiteSpace(item.Brand))
+                                            {
+                                                <p class="mb-1">@item.Brand</p>
+                                            }
+
+                                            @if (!string.IsNullOrWhiteSpace(item.Model))
+                                            {
+                                                <p class="mb-2">@item.Model</p>
+                                            }
+
                                             <span class="text-primary">
-                                                NT$ @PlatformItem.CurrentPrice
+                                                NT$ @item.LowestPrice
                                             </span>
+
+                                            @if (!string.IsNullOrWhiteSpace(item.HighestPrice))
+                                            {
+                                                <span class="text-muted">
+                                                    ~ NT$ @item.HighestPrice
+                                                </span>
+                                            }
                                         </div>
 
                                     </div>
                                 </div>
-                            } *@
-
+                            }
 
                             <!-- Pagination -->
                             <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">

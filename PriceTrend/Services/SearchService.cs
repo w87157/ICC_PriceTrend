@@ -51,7 +51,9 @@ namespace PriceTrend.Services
                     ItemName = reader.GetString(reader.GetOrdinal("ItemName")),
                     Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
                     Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
-                    MainImageUrl = reader.IsDBNull(reader.GetOrdinal("MainImageUrl")) ? null : reader.GetString(reader.GetOrdinal("MainImageUrl"))
+                    MainImageUrl = reader.IsDBNull(reader.GetOrdinal("MainImageUrl")) ? null : reader.GetString(reader.GetOrdinal("MainImageUrl")),
+                    LowestPrice = reader.IsDBNull(reader.GetOrdinal("LowestPrice")) ? null : reader.GetString(reader.GetOrdinal("LowestPrice")),
+                    HighestPrice = reader.IsDBNull(reader.GetOrdinal("HighestPrice")) ? null : reader.GetString(reader.GetOrdinal("HighestPrice"))
                 });
             }
 
