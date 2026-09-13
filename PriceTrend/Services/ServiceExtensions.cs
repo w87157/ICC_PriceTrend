@@ -4,6 +4,8 @@
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
+            services.AddScoped<SearchService>();
+
             services.AddScoped<CrawlerService>();
 
             services.AddScoped<ComparisonService>();
