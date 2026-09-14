@@ -591,21 +591,39 @@
                             <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="pagination d-flex justify-content-center mt-5">
 
-                                    <a href="#" class="rounded">&laquo;</a>
+                                    @* 上一頁 *@
+                                    @if (ViewBag.CurrentPage > 1)
+                                    {
+                                        <a asp-controller="Shop"
+                                           asp-action="Index"
+                                           asp-route-keyword="@ViewBag.Keyword"
+                                           asp-route-page="@(ViewBag.CurrentPage - 1)"
+                                           class="rounded"> &laquo;
+                                        </a>
+                                    }
 
-                                    <a href="#" class="active rounded">1</a>
+                                    @* 頁碼 *@
+                                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                    {
+                                        <a asp-controller="Shop"
+                                           asp-action="Index"
+                                           asp-route-keyword="@ViewBag.Keyword"
+                                           asp-route-page="@i"
+                                           class="rounded @(i == ViewBag.CurrentPage ? "active" : "")">
+                                            @i
+                                        </a>
+                                    }
 
-                                    <a href="#" class="rounded">2</a>
-
-                                    <a href="#" class="rounded">3</a>
-
-                                    <a href="#" class="rounded">4</a>
-
-                                    <a href="#" class="rounded">5</a>
-
-                                    <a href="#" class="rounded">6</a>
-
-                                    <a href="#" class="rounded">&raquo;</a>
+                                    @* 下一頁 *@
+                                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                                    {
+                                        <a asp-controller="Shop"
+                                           asp-action="Index"
+                                           asp-route-keyword="@ViewBag.Keyword"
+                                           asp-route-page="@(ViewBag.CurrentPage + 1)"
+                                           class="rounded">&raquo;
+                                        </a>
+                                    }
 
                                 </div>
                             </div>
