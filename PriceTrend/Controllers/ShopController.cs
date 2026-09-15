@@ -13,11 +13,27 @@ namespace PriceTrend.Controllers
             _searchService = searchService;
         }
 
-        public IActionResult Index(string? keyword, int page=1)
+        public IActionResult Index(string? keyword, string? sort, int page=1)
         {
             int pageSize = 60;
 
             var products = _searchService.Search(keyword);
+
+            // 價格排序
+            switch (sort)
+            {
+                case "price_asc":
+                    products = products
+                        .OrderBy(x => decimal.TryParse(x.LowestPrice, out var p) ? p:
+                        decimal.MaxValue)
+                        .ToList();
+                    break;
+                case "price_desc":
+                    products = products
+                        .OrderByDescending(x => decimal.TryParse(x.LowestPrice, out var p) ? p : 0)
+                        .ToList();
+                    break;
+            }
 
             int totalCount = products.Count;
 
@@ -32,6 +48,7 @@ namespace PriceTrend.Controllers
                 (int)Math.Ceiling(totalCount / (double)pageSize);
 
             ViewBag.Keyword = keyword;
+            ViewBag.Sort = sort;
 
             return View(pageProducts);
         }
