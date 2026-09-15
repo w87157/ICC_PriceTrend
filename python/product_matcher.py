@@ -1,4 +1,4 @@
-from models.standard_product import StandardProduct
+from product_analyzer import (get_brand_display_name, get_product_type_display_name)
 
 # =========================================================
 # 取得商品欄位
@@ -239,6 +239,44 @@ def is_same_product(product1, product2):
 
 
 # =========================================================
+# 判斷 StandardProduct 是否對應既有 Items
+# =========================================================
+def is_same_existing_item(standard_product, item):
+    """
+    判斷新的 StandardProduct 是否對應資料庫中的既有 Items。
+
+    第一階段跨平台匹配規則：
+    1. Brand 必須存在
+    2. Model 必須存在
+    3. Brand 必須完全相同（忽略大小寫）
+    4. Model 必須完全相同（忽略大小寫）
+
+    Items 目前只保存 Brand / Model 等基本資料，因此這裡
+    不使用 is_same_product() 的規格缺省容錯規則。
+    """
+    if standard_product is None or item is None:
+        return False
+
+    brand = get_value(standard_product, "brand")
+    model = get_value(standard_product, "model")
+
+    item_brand = item.get("Brand")
+    item_model = item.get("Model")
+
+    if not brand or not model:
+        return False
+
+    if not item_brand or not item_model:
+        return False
+
+    return (
+        str(brand).strip().upper() == str(item_brand).strip().upper()
+        and
+        str(model).strip().upper() == str(item_model).strip().upper()
+    )
+
+
+# =========================================================
 # 計算商品相似度
 # =========================================================
 def calculate_similarity(product1, product2):
@@ -375,7 +413,6 @@ def compare_products(product1, product2):
         }
 
     similarity = calculate_similarity(product1, product2)
-
     same_product = is_same_product(product1, product2)
 
     return {
@@ -395,15 +432,25 @@ def build_standard_item_name(product):
     brand = get_value(product, "brand")
     series = get_value(product, "series")
     model = get_value(product, "model")
+    product_type = get_value(product, "product_type")
 
-    if brand:
-        parts.append(str(brand).strip())
+    # Brand：英文 + 中文
+    brand_display = get_brand_display_name(brand)
+    if brand_display:
+        parts.append(brand_display)
 
+    # Series
     if series:
         parts.append(str(series).strip())
 
+    # Model
     if model:
         parts.append(str(model).strip())
+
+    # ProductType：中文
+    product_type_display = get_product_type_display_name(product_type)
+    if product_type_display:
+        parts.append(product_type_display)
 
     return " ".join(parts)
 

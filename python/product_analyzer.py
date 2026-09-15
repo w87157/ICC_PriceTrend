@@ -51,6 +51,55 @@ BRANDS = [
     "BASEMO",
 ]
 
+# =========================================================
+# 品牌中文名稱對照
+# =========================================================
+BRAND_DISPLAY_NAMES = {
+    "LOGITECH": "羅技",
+    "TP-LINK": "TP-Link",
+    "SANDISK": "SanDisk",
+    "ASUS": "華碩",
+    "MSI": "微星",
+    "RAZER": "雷蛇",
+    "APPLE": "蘋果",
+    "ACER": "宏碁",
+    "ADATA": "威剛",
+    "KINGSTON": "金士頓",
+    "INTEL": "英特爾",
+    "D-LINK": "友訊",
+    "SAMSUNG": "三星",
+    "XIAOMI": "小米",
+    "HP": "惠普",
+    "AMD": "超微",
+    "PHILIPS": "飛利浦",
+    "TRANSCEND": "創見",
+    "NVIDIA": "輝達",
+    "GALAX": "影馳",
+    "AOPEN": "建碁",
+    "LENOVO": "聯想",
+    "TEAM": "十銓",
+    "VIEWSONIC": "優派",
+    "SONY": "索尼",
+    "WD": "威騰",
+    "LG": "樂金",
+    "AOC": "AOC",
+    "BENQ": "明基",
+    "CREATIVE": "創新科技",
+    "CODEWAY": "",
+    "CAMEL": "",
+    "COX": "",
+    "CCHING": "",
+    "AOTTO": "",
+    "ANTIAN": "",
+    "ADAMOUTDOOR": "",
+    "AOLION": "",
+    "AERIVO": "",
+    "ADAM ELEMENTS": "亞果元素",
+    "B100": "",
+    "BEASAF": "",
+    "BASEMO": "",
+}
+
 # 非商品品牌 / 零組件品牌
 COMPONENT_BRANDS = {
     "NVIDIA",
@@ -116,6 +165,19 @@ def parse_brand(name):
     loose_candidates.sort(key=lambda x: x["position"])
     return loose_candidates[0]["brand"]
 
+def get_brand_display_name(brand):
+    if not brand:
+        return None
+
+    brand = str(brand).strip().upper()
+
+    chinese_name = BRAND_DISPLAY_NAMES.get(brand)
+
+    if chinese_name:
+        return f"{brand} {chinese_name}"
+
+    # 找不到中文名稱時，至少保留英文品牌
+    return brand
 
 # =========================================================
 # 解析系列
@@ -142,7 +204,7 @@ def parse_series(name):
 # 解析商品類型
 # =========================================================
 PRODUCT_TYPE_RULES = {
-    # 高優先級：配件 / 特殊類型
+    # 配件 / 特殊類型
     "monitor_stand": [
         "螢幕增高架", "螢幕增高器", "螢幕置物架", "螢幕置物架",
         "螢幕支架", "螢幕架", "螢幕手臂", "螢幕支臂",
@@ -289,6 +351,83 @@ PRODUCT_TYPE_EXCLUDE_RULES = {
     "cable": ["電源延長線", "延長插座", "排插"],
 }
 
+# =========================================================
+# 商品類型中文名稱
+# =========================================================
+PRODUCT_TYPE_DISPLAY_NAMES = {
+    "monitor_stand": "螢幕支架",
+    "screen_protector": "螢幕保護貼",
+    "screen_cleaning": "螢幕清潔用品",
+    "monitor_light": "螢幕掛燈",
+
+    "laptop_bag": "筆電包",
+    "laptop_stand": "筆電支架",
+
+    "mouse_pad": "滑鼠墊",
+    "keyboard_mouse_combo": "鍵鼠組",
+
+    "storage_enclosure": "硬碟外接盒",
+    "hdmi_switch": "HDMI切換器",
+    "wifi_extender": "WiFi訊號延伸器",
+
+    "game_wheel": "遊戲方向盤",
+    "game_console": "遊戲主機",
+    "game_controller": "遊戲控制器",
+    "game_accessory": "遊戲配件",
+    "game_software": "遊戲軟體",
+
+    "router": "路由器",
+    "network_switch": "網路交換器",
+    "network_adapter": "網路卡",
+    "network_connector": "網路接頭",
+
+    "usb_flash_drive": "USB隨身碟",
+    "memory_card": "記憶卡",
+    "ssd": "固態硬碟",
+    "hard_drive": "硬碟",
+
+    "graphics_card": "顯示卡",
+    "motherboard": "主機板",
+    "computer_case": "電腦機殼",
+    "cooling": "散熱器",
+    "ram": "記憶體",
+    "cpu": "處理器",
+
+    "mouse": "滑鼠",
+    "keyboard": "鍵盤",
+
+    "monitor": "螢幕",
+    "laptop": "筆記型電腦",
+    "tablet": "平板電腦",
+    "phone": "手機",
+
+    "speaker": "喇叭",
+    "headphone": "耳機",
+    "microphone": "麥克風",
+    "webcam": "網路攝影機",
+    "camera": "攝影機",
+
+    "cable": "線材",
+    "adapter": "轉接器",
+    "hub": "集線器",
+    "power_strip": "延長插座",
+    "charger": "充電器",
+
+    "card_reader": "讀卡機",
+    "drawing_tablet": "繪圖板",
+    "presentation_remote": "簡報筆",
+    "stylus": "觸控筆",
+    "printer": "印表機",
+
+    "television": "電視",
+    "wrist_rest": "護腕墊",
+    "case": "保護套",
+    "cable_management": "理線用品",
+    "computer_stand": "電腦主機架",
+    "software": "軟體",
+    "receiver": "無線接收器",
+}
+
 
 def _contains_any(text, keywords):
     return any(keyword.upper() in text for keyword in keywords)
@@ -301,10 +440,7 @@ def parse_product_type(name):
     name_upper = str(name).upper().strip()
 
     # 筆電主體優先於名稱中的 SSD / RAM / CPU / RTX 等規格詞
-    laptop_primary_keywords = [
-        "筆記型電腦", "筆記本電腦", "筆電",
-        "NOTEBOOK", "LAPTOP", "MACBOOK",
-    ]
+    laptop_primary_keywords = ["筆記型電腦", "筆記本電腦", "筆電", "NOTEBOOK", "LAPTOP", "MACBOOK"]
     if _contains_any(name_upper, laptop_primary_keywords):
         return "laptop"
 
@@ -415,6 +551,15 @@ def parse_product_type(name):
             return product_type
 
     return None
+
+def get_product_type_display_name(product_type):
+    if not product_type:
+        return None
+
+    return PRODUCT_TYPE_DISPLAY_NAMES.get(
+        str(product_type).strip(),
+        str(product_type).strip()
+    )
 
 
 # =========================================================

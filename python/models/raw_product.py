@@ -7,9 +7,12 @@ class RawProduct:
         price=None,
         url="",
         image_url=None,
-        category_name=None,
-        raw_data=None
+        category_name=None
     ):
+
+        # =====================================================
+        # 平台資料
+        # =====================================================
 
         # 商品來自哪一個平台
         self.platform = platform
@@ -31,11 +34,50 @@ class RawProduct:
 
         # 商品分類
         self.category_name = category_name
+        
 
-        # 保留其他原始資料
-        self.raw_data = raw_data if raw_data is not None else {}
+    # =========================================================
+    # 轉換成 CSV 資料
+    # =========================================================
+    def to_dict(self):
+        return {
+            "platform": self.platform,
+            "platform_item_id": self.platform_item_id,
+            "product_name": self.product_name,
+            "price": self.price,
+            "url": self.url,
+            "image_url": self.image_url,
+            "category_name": self.category_name
+        }
 
+    # =========================================================
+    # 從 CSV 資料建立 RawProduct
+    # =========================================================
+    @classmethod
+    def from_dict(cls, data):
+        price = data.get("price")
 
+        if price is not None and price != "":
+            try:
+                price = float(price)
+            except (ValueError, TypeError):
+                price = None
+        else:
+            price = None
+
+        return cls(
+            platform=data.get("platform"),
+            platform_item_id=data.get("platform_item_id"),
+            product_name=data.get("product_name", ""),
+            price=price,
+            url=data.get("url", ""),
+            image_url=data.get("image_url") or None,
+            category_name=data.get("category_name")
+        )
+
+    # =========================================================
+    # 顯示商品資料
+    # =========================================================
     def __str__(self):
         return (
             f"平台：{self.platform}\n"

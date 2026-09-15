@@ -5,6 +5,8 @@ from pathlib import Path
 import pyodbc
 from dotenv import load_dotenv
 
+from product_matcher import is_same_existing_item
+
 # ============================================================
 # 讀取 .env
 # ============================================================
@@ -70,9 +72,76 @@ def get_platform_guid(cursor, platform_name):
 
 
 # ============================================================
-# 取得或建立商品 Items
+# 依 Brand + Model 查詢既有 Items
 # ============================================================
-def get_or_create_item(
+def find_existing_items(cursor, category_guid, brand, model):
+    sql = """
+        SELECT
+            ItemGuid,
+            CategoryGuid,
+            ItemName,
+            Brand,
+            Model,
+            MainImageUrl
+        FROM dbo.Items
+        WHERE CategoryGuid = ?
+          AND Brand = ?
+          AND Model = ?
+    """
+
+    cursor.execute(
+        sql,
+        category_guid,
+        brand,
+        model
+    )
+
+    rows = cursor.fetchall()
+
+    items = []
+
+    for row in rows:
+        items.append({
+            "ItemGuid": row[0],
+            "CategoryGuid": row[1],
+            "ItemName": row[2],
+            "Brand": row[3],
+            "Model": row[4],
+            "MainImageUrl": row[5],
+        })
+
+    return items
+
+
+# ============================================================
+# 判斷是否可以使用既有 Items
+# ============================================================
+def find_matching_item(cursor, category_guid, standard_product):
+    brand = standard_product.brand
+    model = standard_product.model
+
+    # Brand / Model 缺少任一項，不進行跨平台匹配
+    if not brand or not model:
+        return None
+
+    candidates = find_existing_items(
+        cursor,
+        category_guid,
+        brand,
+        model
+    )
+
+    for item in candidates:
+        if is_same_existing_item(standard_product, item):
+            return item
+
+    return None
+
+
+# ============================================================
+# 建立新的 Items
+# ============================================================
+def create_item(
     cursor,
     category_guid,
     item_name,
@@ -80,50 +149,6 @@ def get_or_create_item(
     model,
     image_url
 ):
-    # --------------------------------------------------------
-    # 先確認商品是否已經存在
-    # --------------------------------------------------------
-    sql = """
-        SELECT ItemGuid
-        FROM dbo.Items
-        WHERE CategoryGuid = ? AND ItemName = ?
-    """
-
-    cursor.execute(
-        sql,
-        category_guid,
-        item_name
-    )
-
-    row = cursor.fetchone()
-
-    # --------------------------------------------------------
-    # 商品已存在
-    # --------------------------------------------------------
-    if row is not None:
-        item_guid = row[0]
-
-        sql = """
-            UPDATE dbo.Items
-            SET Brand = ?,
-                Model = ?,
-                MainImageUrl = ?
-            WHERE ItemGuid = ?
-        """
-
-        cursor.execute(
-            sql,
-            brand,
-            model,
-            image_url,
-            item_guid
-        )
-
-        return item_guid
-
-    # --------------------------------------------------------
-    # 商品不存在 → 建立新的商品
-    # --------------------------------------------------------
     sql = """
         INSERT INTO dbo.Items
         (
@@ -149,6 +174,60 @@ def get_or_create_item(
     row = cursor.fetchone()
 
     return row[0]
+
+
+# ============================================================
+# 取得或建立商品 Items
+# ============================================================
+def get_or_create_item(
+    cursor,
+    category_guid,
+    item_name,
+    brand,
+    model,
+    image_url,
+    standard_product
+):
+    # --------------------------------------------------------
+    # 先用 Brand + Model 尋找既有商品
+    # --------------------------------------------------------
+    matched_item = find_matching_item(
+        cursor,
+        category_guid,
+        standard_product
+    )
+
+    if matched_item is not None:
+        item_guid = matched_item["ItemGuid"]
+
+        # 找到既有商品 → 共用 ItemGuid
+        # 若目前資料沒有主圖，才補上新平台的圖片
+        if not matched_item["MainImageUrl"] and image_url:
+            sql = """
+                UPDATE dbo.Items
+                SET MainImageUrl = ?
+                WHERE ItemGuid = ?
+            """
+
+            cursor.execute(
+                sql,
+                image_url,
+                item_guid
+            )
+
+        return item_guid
+
+    # --------------------------------------------------------
+    # 找不到既有商品 → 建立新的 Items
+    # --------------------------------------------------------
+    return create_item(
+        cursor,
+        category_guid,
+        item_name,
+        brand,
+        model,
+        image_url
+    )
 
 
 # ============================================================
@@ -284,6 +363,9 @@ def save_to_database(product_groups):
 
             brand = standard_product.brand
             model = standard_product.model
+            
+            if not brand or not model:
+                continue
 
             # 第一筆商品作為主圖片
             first_product = group["products"][0]
@@ -297,7 +379,8 @@ def save_to_database(product_groups):
                 item_name,
                 brand,
                 model,
-                image_url
+                image_url,
+                standard_product
             )
 
             # =================================================

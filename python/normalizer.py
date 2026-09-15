@@ -1,5 +1,6 @@
 import re
 
+
 # ============================================================
 # 品牌名稱統一
 # ============================================================
@@ -29,6 +30,7 @@ BRAND_ALIASES = {
 # 可以移除的行銷文字
 # ============================================================
 REMOVE_WORDS = [
+
     # 保固
     r"原廠保固",
     r"原廠保證",
@@ -93,6 +95,7 @@ QUANTITY_PATTERNS = [
 # 1. 符號統一
 # ============================================================
 def normalize_symbols(text):
+
     if not text:
         return ""
 
@@ -111,10 +114,12 @@ def normalize_symbols(text):
 # 2. 移除行銷文字
 # ============================================================
 def remove_marketing_words(text):
+
     if not text:
         return ""
 
     for word in REMOVE_WORDS:
+
         text = re.sub(
             word,
             " ",
@@ -129,10 +134,12 @@ def remove_marketing_words(text):
 # 3. 移除銷售數量
 # ============================================================
 def remove_quantity_words(text):
+
     if not text:
         return ""
 
     for pattern in QUANTITY_PATTERNS:
+
         text = re.sub(
             pattern,
             " ",
@@ -147,6 +154,7 @@ def remove_quantity_words(text):
 # 4. 品牌名稱統一
 # ============================================================
 def normalize_brand_names(text):
+
     if not text:
         return ""
 
@@ -173,6 +181,7 @@ def normalize_brand_names(text):
 # 5. 移除重複品牌
 # ============================================================
 def remove_duplicate_brands(text):
+
     if not text:
         return ""
 
@@ -189,7 +198,6 @@ def remove_duplicate_brands(text):
 
     for word in words:
 
-        # 如果前後兩個詞都是相同品牌，就刪除後面的
         if (
             word.upper() in brand_names
             and word.upper() == previous_word.upper()
@@ -206,6 +214,7 @@ def remove_duplicate_brands(text):
 # 6. 尺寸單位統一
 # ============================================================
 def normalize_size_units(text):
+
     if not text:
         return ""
 
@@ -223,6 +232,7 @@ def normalize_size_units(text):
 # 7. 常見單位統一
 # ============================================================
 def normalize_common_units(text):
+
     if not text:
         return ""
 
@@ -273,6 +283,7 @@ def normalize_common_units(text):
 # 8. Wi-Fi 統一
 # ============================================================
 def normalize_wifi(text):
+
     if not text:
         return ""
 
@@ -290,6 +301,7 @@ def normalize_wifi(text):
 # 9. USB 統一
 # ============================================================
 def normalize_usb(text):
+
     if not text:
         return ""
 
@@ -307,6 +319,7 @@ def normalize_usb(text):
 # 10. 移除多餘符號
 # ============================================================
 def remove_extra_symbols(text):
+
     if not text:
         return ""
 
@@ -329,6 +342,7 @@ def remove_extra_symbols(text):
 # 11. 空白統一
 # ============================================================
 def normalize_spaces(text):
+
     if not text:
         return ""
 
