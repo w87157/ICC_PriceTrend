@@ -38,20 +38,31 @@
                         </div>
                     </div>
 
-
                     <div class="col-xl-3 text-end">
                         <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between">
-                            <label for="electronics">Sort By:</label>
+                            <label for="sortSelect">Sort By:</label>
 
                             <select id="sortSelect"
-                                    class="border-0 form-select-sm bg-light me-3"
-                                <option value="" selected=@(string.IsNullOrEmpty(ViewBag.Sort) ? "selected" : null)">預設排序</option>
-                                <option value="price_asc" selected="@(ViewBag.Sort == "price_asc" ? "selected" : null)">價格由低到高</option>
-                                <option value="price_desc" selected="@(ViewBag.Sort == "price_desc" ? "selected" : null)">價格由高到低</option>
+                                    class="border-0 form-select-sm bg-light me-3">
+
+                                <option value=""
+                                        selected="@(string.IsNullOrEmpty(ViewBag.Sort) ? "selected" : null)">
+                                    預設排序
+                                </option>
+
+                                <option value="price_asc"
+                                        selected="@(ViewBag.Sort == "price_asc" ? "selected" : null)">
+                                    價格由低到高
+                                </option>
+
+                                <option value="price_desc"
+                                        selected="@(ViewBag.Sort == "price_desc" ? "selected" : null)">
+                                    價格由高到低
+                                </option>
+
                             </select>
                         </div>
                     </div>
-
 
                     <div class="col-lg- col-xl-2">
                         <ul class="nav nav-pills d-inline-flex text-center py-2 px-2 rounded bg-light mb-4">
@@ -71,62 +82,95 @@
 
                 <!-- Product List -->
                 <div class="tab-content">
-
                     <div id="tab-5"
                          class="tab-pane fade show p-0 active">
-
                         <div class="row g-4 product">
                             @foreach (var item in Model)
                             {
                                 <div class="col-lg-3">
                                     <div class="product-item">
-
-                                        @if (!string.IsNullOrWhiteSpace(item.MainImageUrl))
-                                        {
-                                            <a asp-controller="Product"
-                                                   asp-action="Single"
-                                                   asp-route-id="@item.ItemGuid">
-                                                <img src="@item.MainImageUrl"
-                                                     class="img-fluid w-100"
-                                                     alt="@item.ItemName">
-                                            </a>
-                                        }
-
-                                        <div class="text-center p-4">
-                                            <h5>
+                                        <!-- 商品卡片主體 -->
+                                        <div class="product-item-inner">
+                                            <!-- 商品圖片區 -->
+                                            <div class="product-item-inner-item">
                                                 <a asp-controller="Product"
                                                    asp-action="Single"
                                                    asp-route-id="@item.ItemGuid">
-                                                @item.ItemName
+                                                    <img src="@(string.IsNullOrWhiteSpace(item.MainImageUrl) ?
+                                                                Url.Content("~/lib/home/img/No_Image.png") :
+                                                                item.MainImageUrl)"
+                                                         class="img-fluid w-100 rounded-top"
+                                                         alt="@item.ItemName" />
                                                 </a>
-                                            </h5>
 
-                                            @if (!string.IsNullOrWhiteSpace(item.Brand))
-                                            {
-                                                <p class="mb-1">@item.Brand</p>
-                                            }
+                                                <!-- 商品詳細資訊按鈕區 -->
+                                                <div class="product-details">
+                                                    <a asp-controller="Product"
+                                                       asp-action="Single"
+                                                       asp-route-id="@item.ItemGuid">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
 
-                                            @if (!string.IsNullOrWhiteSpace(item.Model))
-                                            {
-                                                <p class="mb-2">@item.Model</p>
-                                            }
+                                            <!-- 商品文字資訊 -->
+                                            <div class="text-center rounded-bottom p-4">
+                                                <h5>
+                                                    <a asp-controller="Product"
+                                                       asp-action="Single"
+                                                       asp-route-id="@item.ItemGuid">
+                                                        @item.ItemName
+                                                    </a>
+                                                </h5>
 
-                                            <span class="text-primary">
-                                                NT$ @item.LowestPrice
-                                            </span>
+                                                @* 
+                                                @if (!string.IsNullOrWhiteSpace(item.Brand))
+                                                {
+                                                    <p class="mb-1">@item.Brand</p>
+                                                }
 
-                                            @if (!string.IsNullOrWhiteSpace(item.HighestPrice))
-                                            {
-                                                <span class="text-muted">
-                                                    ~ NT$ @item.HighestPrice
+                                                @if (!string.IsNullOrWhiteSpace(item.Model))
+                                                {
+                                                    <p class="mb-2">@item.Model</p>
+                                                }
+
+                                                <span class="text-primary">
+                                                    NT$ @item.LowestPrice
                                                 </span>
-                                            }
-                                        </div>
+                                                *@
 
+                                                @{
+                                                    decimal lowestPrice;
+                                                    decimal highestPrice;
+
+                                                    bool hasLowestPrice = decimal.TryParse(item.LowestPrice, out lowestPrice);
+                                                    bool hasHighestPrice = decimal.TryParse(item.HighestPrice, out highestPrice);
+                                                }
+
+                                                @if (hasLowestPrice)
+                                                {
+                                                    <span class="text-danger">
+                                                        NT$ @lowestPrice.ToString("N0")
+                                                    </span>
+
+                                                    @if (hasHighestPrice && highestPrice != lowestPrice)
+                                                    {
+                                                        <span class="text-danger">
+                                                            ~ NT$ @highestPrice.ToString("N0")
+                                                        </span>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">
+                                                        暫無價格
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             }
-
                             <!-- Pagination -->
                             <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
                                 <div class="pagination d-flex justify-content-center mt-5">

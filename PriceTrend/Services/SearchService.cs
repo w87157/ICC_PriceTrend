@@ -24,14 +24,28 @@ namespace PriceTrend.Services
 
             const string sql = """
                 SELECT
-                    ItemGuid, ItemName, Brand, Model, MainImageUrl, LowestPrice, HighestPrice
-                FROM Items
+                    i.ItemGuid,
+                    i.ItemName,
+                    i.Brand,
+                    i.Model,
+                    i.MainImageUrl,
+                    MIN(pi.CurrentPrice) AS LowestPrice,
+                    MAX(pi.CurrentPrice) AS HighestPrice
+                FROM Items i
+                LEFT JOIN PlatformItems pi
+                    ON i.ItemGuid = pi.ItemGuid
                 WHERE
                     @Keyword = ''
-                    OR ItemName LIKE @KeywordPattern 
-                    OR Brand LIKE @KeywordPattern
-                    OR Model LIKE @KeywordPattern
-                ORDER BY ItemName;
+                    OR i.ItemName LIKE @KeywordPattern
+                    OR i.Brand LIKE @KeywordPattern
+                    OR i.Model LIKE @KeywordPattern
+                GROUP BY
+                    i.ItemGuid,
+                    i.ItemName,
+                    i.Brand,
+                    i.Model,
+                    i.MainImageUrl
+                ORDER BY i.ItemName;
             """;
 
             using var connection = new SqlConnection(connectionString);
@@ -52,8 +66,8 @@ namespace PriceTrend.Services
                     Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
                     Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
                     MainImageUrl = reader.IsDBNull(reader.GetOrdinal("MainImageUrl")) ? null : reader.GetString(reader.GetOrdinal("MainImageUrl")),
-                    LowestPrice = reader.IsDBNull(reader.GetOrdinal("LowestPrice")) ? null : reader.GetString(reader.GetOrdinal("LowestPrice")),
-                    HighestPrice = reader.IsDBNull(reader.GetOrdinal("HighestPrice")) ? null : reader.GetString(reader.GetOrdinal("HighestPrice"))
+                    LowestPrice = reader.IsDBNull(reader.GetOrdinal("LowestPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("LowestPrice")).ToString(),
+                    HighestPrice = reader.IsDBNull(reader.GetOrdinal("HighestPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("HighestPrice")).ToString()
                 });
             }
 
@@ -158,11 +172,12 @@ namespace PriceTrend.Services
                         Prices = new List<PlatformPriceViewModel>()
                     };
                 }
+
                 model.Prices.Add(new PlatformPriceViewModel
                 {
                     PlatformName = reader.GetString(reader.GetOrdinal("PlatformName")),
                     PlatformLogo = reader.IsDBNull(reader.GetOrdinal("LogoUrl")) ? null : reader.GetString(reader.GetOrdinal("LogoUrl")),
-                    Price = reader.IsDBNull(reader.GetOrdinal("CurrentPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("CurrentPrice")).ToString(),
+                    Price = reader.IsDBNull(reader.GetOrdinal("CurrentPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("CurrentPrice")).ToString("N0"),
                     ItemUrl = reader.IsDBNull(reader.GetOrdinal("ItemUrl")) ? null : reader.GetString(reader.GetOrdinal("ItemUrl"))
                 });
             }

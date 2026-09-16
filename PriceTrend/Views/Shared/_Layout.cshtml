@@ -132,54 +132,12 @@
         <!-- Navbar Start -->
         <div class="container-fluid nav-bar p-0">
             <div class="row gx-0 bg-primary px-5 align-items-center">
-                <!-- Main Navigation -->
+
+                <!-- 保留原本 Navbar 高度 -->
                 <div class="col-12">
-                    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-                        <a href="/" class="navbar-brand d-block d-lg-none">
-                            <h1 class="display-6 text-secondary m-0">
-                                <i class="fas fa-chart-line text-white me-2"></i>
-                                ICC PriceTrend
-                            </h1>
-                        </a>
-
-                        <button class="navbar-toggler ms-auto"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target="#navbarCollapse">
-                            <span class="fa fa-bars fa-1x"></span>
-                        </button>
-
-                        <div class="collapse navbar-collapse" id="navbarCollapse">
-                            <div class="navbar-nav ms-auto py-0">
-                                <a href="/" class="nav-item nav-link active"> 首頁 </a>
-                                <a href="#" class="nav-item nav-link"> 商品比價 </a>
-                                <a href="#" class="nav-item nav-link"> 價格趨勢 </a>
-                                <a href="#" class="nav-item nav-link"> 歷史低價 </a>
-
-                                <div class="nav-item dropdown">
-                                    <a href="#"
-                                       class="nav-link dropdown-toggle"
-                                       data-bs-toggle="dropdown">
-                                        探索
-                                    </a>
-
-                                    <div class="dropdown-menu m-0">
-                                        <a href="#" class="dropdown-item">熱門商品</a>
-                                        <a href="#" class="dropdown-item">熱門品牌</a>
-                                        <a href="#" class="dropdown-item">近期降價</a>
-                                        <a href="#" class="dropdown-item">價格排行榜</a>
-                                    </div>
-                                </div>
-
-                                <a href="#" class="nav-item nav-link me-2"> 關於我們 </a>
-                            </div>
-
-                            <a href="#"
-                               class="btn btn-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0">
-                                <i class="fas fa-bell me-2"></i>
-                                設定降價通知
-                            </a>
-                        </div>
+                    <nav class="navbar navbar-expand-lg navbar-light bg-primary" style="min-height: 62px;">
+                        <!-- 保留空白區域，避免 Navbar 高度縮小 -->
+                        <div class="w-100" style="height: 30px;"></div>
                     </nav>
                 </div>
             </div>
@@ -187,49 +145,46 @@
         <!-- Navbar End -->
     </div>
     <!-- Brand / Search End -->
-    
 
-    <!-- Header Spacer (避免 Content 被 fixed-top Header 遮擋) -->
-    <div style="height: 187px;"></div>
+    <!-- Header Spacer -->
+    <div class="header-spacer"></div>
 
-    <!-- ========================================================= -->
     <!-- Main Content -->
-    <!-- ========================================================= -->
-    @RenderBody()
+    <main class="site-content">
+        @RenderBody()
+    </main>
 
     <!-- Copyright Start -->
     <div class="container-fluid copyright py-4">
         <div class="container">
             <div class="row g-4 align-items-center">
+
+                <!-- 左側：網站資訊 -->
                 <div class="col-md-6 text-center text-md-start mb-md-0">
                     <span class="text-white">
-                        <a href="#" class="border-bottom text-white">
-                            <i class="fas fa-copyright text-light me-2"></i>您的網站名稱
-                        </a>
-                        ，保留所有權利。
+                        <i class="fas fa-copyright text-light me-2"></i>
+                        本網站為非營利教學用途製作，僅供學習與展示使用
                     </span>
                 </div>
 
+                <!-- 右側：設計資訊 -->
                 <div class="col-md-6 text-center text-md-end text-white">
-                    網頁設計：
-                    <a class="border-bottom text-white" href="https://htmlcodex.com">
-                        HTML Codex
-                    </a>
-                    ｜ 發行單位：
-                    <a class="border-bottom text-white" href="https://themewagon.com">
-                        ThemeWagon
-                    </a>
+                    聯成電腦－宏碁創達資訊工程師產學 A 班
+                    ｜第二組
+                    ｜比價期趨
                 </div>
+
             </div>
         </div>
     </div>
     <!-- Copyright End -->
 
     <!-- Back to Top -->
-    <a href="#" class="btn btn-primary btn-lg-square back-to-top">
+    <!--
+    <button type="button" class="btn btn-primary btn-lg-square back-to-top" aria-label="回到頂端">
         <i class="fa fa-arrow-up"></i>
-    </a>
-
+    </button>
+    -->
     <!-- JavaScript Libraries -->
     <script>
             document.addEventListener("DOMContentLoaded", function() {
