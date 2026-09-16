@@ -15,7 +15,7 @@ namespace PriceTrend.Controllers
 
         public IActionResult Index(string? keyword, string? sort, int page=1)
         {
-            int pageSize = 60;
+            int pageSize = 20;
 
             var products = _searchService.Search(keyword);
 

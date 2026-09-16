@@ -137,23 +137,36 @@ namespace PriceTrend.Services
             using var command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@ItemGuid", itemGuid);
             using var reader = command.ExecuteReader();
+
+            ProductDetailViewModel? model = null;
             while (reader.Read())
             {
-                return new ProductDetailViewModel
-                {
-                    ItemGuid = reader.GetGuid(reader.GetOrdinal("ItemGuid")),
-                    ItemName = reader.GetString(reader.GetOrdinal("ItemName")),
-                    Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
-                    Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
-                    MainImageUrl = reader.IsDBNull(reader.GetOrdinal("MainImageUrl")) ? null : reader.GetString(reader.GetOrdinal("MainImageUrl")),
-                    PlatformName = reader.GetString(reader.GetOrdinal("PlatformName")),
-                    LogoUrl = reader.IsDBNull(reader.GetOrdinal("LogoUrl")) ? null : reader.GetString(reader.GetOrdinal("LogoUrl")),
-                    CurrentPrice = reader.IsDBNull(reader.GetOrdinal("CurrentPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("CurrentPrice")).ToString(),
-                    ItemUrl = reader.IsDBNull(reader.GetOrdinal("ItemUrl")) ? null : reader.GetString(reader.GetOrdinal("ItemUrl"))
 
-                };
+                if (model == null)
+                {
+                    model = new ProductDetailViewModel
+                    {
+                        ItemGuid = reader.GetGuid(reader.GetOrdinal("ItemGuid")),
+                        ItemName = reader.GetString(reader.GetOrdinal("ItemName")),
+                        Brand = reader.IsDBNull(reader.GetOrdinal("Brand")) ? null : reader.GetString(reader.GetOrdinal("Brand")),
+                        Model = reader.IsDBNull(reader.GetOrdinal("Model")) ? null : reader.GetString(reader.GetOrdinal("Model")),
+                        MainImageUrl = reader.IsDBNull(reader.GetOrdinal("MainImageUrl")) ? null : reader.GetString(reader.GetOrdinal("MainImageUrl")),
+                        PlatformName = reader.GetString(reader.GetOrdinal("PlatformName")),
+                        LogoUrl = reader.IsDBNull(reader.GetOrdinal("LogoUrl")) ? null : reader.GetString(reader.GetOrdinal("LogoUrl")),
+                        CurrentPrice = reader.IsDBNull(reader.GetOrdinal("CurrentPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("CurrentPrice")).ToString(),
+                        ItemUrl = reader.IsDBNull(reader.GetOrdinal("ItemUrl")) ? null : reader.GetString(reader.GetOrdinal("ItemUrl")),
+                        Prices = new List<PlatformPriceViewModel>()
+                    };
+                }
+                model.Prices.Add(new PlatformPriceViewModel
+                {
+                    PlatformName = reader.GetString(reader.GetOrdinal("PlatformName")),
+                    PlatformLogo = reader.IsDBNull(reader.GetOrdinal("LogoUrl")) ? null : reader.GetString(reader.GetOrdinal("LogoUrl")),
+                    Price = reader.IsDBNull(reader.GetOrdinal("CurrentPrice")) ? null : reader.GetDecimal(reader.GetOrdinal("CurrentPrice")).ToString(),
+                    ItemUrl = reader.IsDBNull(reader.GetOrdinal("ItemUrl")) ? null : reader.GetString(reader.GetOrdinal("ItemUrl"))
+                });
             }
-            return null;
+            return model;
         }
     }
 }
