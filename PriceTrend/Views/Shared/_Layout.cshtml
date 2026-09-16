@@ -77,14 +77,65 @@
                             </div>
                         </form>
                     </div>
-                </div>
+                </form>
 
-                <!-- 會員 -->
-                <div class="col-lg-2 text-center text-lg-end mt-3 mt-lg-0">
-                    <a href="#" class="d-inline-flex align-items-center text-muted" title="會員中心">
-                        <span class="rounded-circle btn-md-square border">
+                <div class="mt-2 ms-3">
+                    <small class="text-muted me-2">熱門搜尋：</small>
+                    <a href="~/Search/Index?keyword=iPhone" class="text-muted me-3">iPhone</a>
+                    <a href="~/Search/Index?keyword=RTX" class="text-muted me-3">RTX 顯示卡</a>
+                    <a href="~/Search/Index?keyword=MacBook" class="text-muted me-3">MacBook</a>
+                    <a href="~/Search/Index?keyword=Switch" class="text-muted">Switch 2</a>
+                </div>
+            </div>
+            <!-- 3. 右側功能圖示與會員中心 -->
+            <div class="d-flex align-items-center mb-3 mb-lg-0">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a href="~/Profile/Index#v-pills-favorites" class="d-inline-flex align-items-center text-muted me-3" title="我的收藏">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-heart"></i>
+                        </span>
+                    </a>
+
+                    <a href="~/Profile/Index#v-pills-notifications" class="d-inline-flex align-items-center text-muted me-3" title="降價通知">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-bell"></i>
+                        </span>
+                    </a>
+
+                    <div class="d-flex align-items-center">
+                        <a href="~/Profile/Index" class="d-inline-flex align-items-center text-muted me-2" title="會員中心">
+                            <span class="rounded-circle btn-md-square border bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </a>
+                        <a href="~/Account/Logout" class="text-danger small text-decoration-none fw-bold" title="登出">登出</a>
+                    </div>
+                }
+                else
+                {
+                    <a href="~/Account/Login" class="d-inline-flex align-items-center text-muted text-decoration-none" title="登入帳號">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
                             <i class="fas fa-user"></i>
                         </span>
+                    </a>
+                }
+            </div>
+
+        </div>
+    </div>
+    <!-- Brand / Search End -->
+    <!-- Navbar Start -->
+    <div class="container-fluid nav-bar p-0">
+        <div class="row gx-0 bg-primary px-5 align-items-center">
+            <!-- Main Navigation -->
+            <div class="col-12">
+                <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+                    <a href="/" class="navbar-brand d-block d-lg-none">
+                        <h1 class="display-6 text-secondary m-0">
+                            <i class="fas fa-chart-line text-white me-2"></i>
+                            ICC PriceTrend
+                        </h1>
                     </a>
                 </div>
 
@@ -140,6 +191,24 @@
     </a>
 
     <!-- JavaScript Libraries -->
+    <script>
+            document.addEventListener("DOMContentLoaded", function() {
+        var hash = window.location.hash;
+        if (hash) {
+            var triggerEl = document.querySelector('.nav-pills a[href="' + hash + '"]');
+            if (triggerEl) {
+                triggerEl.click();
+            }
+        }
+
+        var tabLinks = document.querySelectorAll('.nav-pills a');
+        tabLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+    });
+</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/home/wow/wow.min.js"></script>
@@ -153,7 +222,7 @@
             }
     </script>
     <script src="~/js/home/main.js"></script>
-
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>
