@@ -44,8 +44,10 @@
     <!-- Spinner End -->
     <!-- Brand / Search Start -->
     <div class="container-fluid px-5 py-4">
-        <div class="row gx-0 align-items-center">
-            <div class="col-lg-3 text-center text-lg-start mb-3 mb-lg-0">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+
+            <!-- 1. Logo 區塊 -->
+            <div class="mb-3 mb-lg-0">
                 <a href="/" class="navbar-brand p-0">
                     <h1 class="display-6 text-primary m-0">
                         <i class="fas fa-chart-line text-secondary me-2"></i>
@@ -55,63 +57,67 @@
                 </a>
             </div>
 
-            <div class="col-lg-7">
-                <div class="px-lg-4">
-                    <form asp-controller="Search" asp-action="Index" method="get" onsubmit="return validateSearch();">
-                        <div class="d-flex border rounded-pill overflow-hidden">
-                            <input 
-                                name="keyword"
-                                id="searchKeyword"
-                                class="form-control border-0 border-start rounded-0 py-3"
-                                type="search"
-                                value="@Context.Request.Query["keyword"]"
-                                placeholder="請輸入商品關鍵字..."
-                                aria-label="商品搜尋" />
+            <!-- 2. 搜尋列區塊 -->
+            <div class="flex-grow-1 px-lg-4 mb-3 mb-lg-0" style="max-width: 650px;">
+                <form asp-controller="Search" asp-action="Index" method="get" onsubmit="return validateSearch();">
+                    <div class="d-flex border rounded-pill overflow-hidden shadow-sm">
+                        <input name="keyword"
+                               id="searchKeyword"
+                               class="form-control border-0 border-start rounded-0 py-3 ps-4"
+                               type="search"
+                               value="@Context.Request.Query["keyword"]"
+                               placeholder="請輸入商品關鍵字..."
+                               aria-label="商品搜尋" />
 
-                            <button type="submit" class="btn btn-primary rounded-0 px-4 text-nowrap" style="min-width: 90px; white-space: nowrap">
-                                <i class="fas fa-search me-1"></i>搜尋
-                            </button>
-                        </div>
-                    </form>
-
-                    <div class="mt-2 ms-3">
-                        <small class="text-muted me-2">熱門搜尋：</small>
-                        <a href="#" class="text-muted me-3">iPhone</a>
-                        <a href="#" class="text-muted me-3">RTX 顯示卡</a>
-                        <a href="#" class="text-muted me-3">MacBook</a>
-                        <a href="#" class="text-muted">Switch 2</a>
+                        <button type="submit" class="btn btn-primary rounded-0 px-4 text-nowrap" style="min-width: 90px;">
+                            <i class="fas fa-search me-1"></i>搜尋
+                        </button>
                     </div>
+                </form>
+
+                <div class="mt-2 ms-3">
+                    <small class="text-muted me-2">熱門搜尋：</small>
+                    <a href="~/Search/Index?keyword=iPhone" class="text-muted me-3">iPhone</a>
+                    <a href="~/Search/Index?keyword=RTX" class="text-muted me-3">RTX 顯示卡</a>
+                    <a href="~/Search/Index?keyword=MacBook" class="text-muted me-3">MacBook</a>
+                    <a href="~/Search/Index?keyword=Switch" class="text-muted">Switch 2</a>
                 </div>
             </div>
+            <!-- 3. 右側功能圖示與會員中心 -->
+            <div class="d-flex align-items-center mb-3 mb-lg-0">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a href="~/Profile/Index#v-pills-favorites" class="d-inline-flex align-items-center text-muted me-3" title="我的收藏">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-heart"></i>
+                        </span>
+                    </a>
 
-            <div class="col-lg-2 text-center text-lg-end mt-3 mt-lg-0">
-                <!-- 收藏 -->
-                <a href="#"
-                   class="d-inline-flex align-items-center text-muted me-3"
-                   title="我的收藏">
-                    <span class="rounded-circle btn-md-square border">
-                        <i class="fas fa-heart"></i>
-                    </span>
-                </a>
+                    <a href="~/Profile/Index#v-pills-notifications" class="d-inline-flex align-items-center text-muted me-3" title="降價通知">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-bell"></i>
+                        </span>
+                    </a>
 
-                <!-- 降價通知 -->
-                <a href="#"
-                   class="d-inline-flex align-items-center text-muted me-3"
-                   title="降價通知">
-                    <span class="rounded-circle btn-md-square border">
-                        <i class="fas fa-bell"></i>
-                    </span>
-                </a>
-
-                <!-- 會員 -->
-                <a href="#"
-                   class="d-inline-flex align-items-center text-muted"
-                   title="會員中心">
-                    <span class="rounded-circle btn-md-square border">
-                        <i class="fas fa-user"></i>
-                    </span>
-                </a>
+                    <div class="d-flex align-items-center">
+                        <a href="~/Profile/Index" class="d-inline-flex align-items-center text-muted me-2" title="會員中心">
+                            <span class="rounded-circle btn-md-square border bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                <i class="fas fa-user"></i>
+                            </span>
+                        </a>
+                        <a href="~/Account/Logout" class="text-danger small text-decoration-none fw-bold" title="登出">登出</a>
+                    </div>
+                }
+                else
+                {
+                    <a href="~/Account/Login" class="d-inline-flex align-items-center text-muted text-decoration-none" title="登入帳號">
+                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="fas fa-user"></i>
+                        </span>
+                    </a>
+                }
             </div>
+
         </div>
     </div>
     <!-- Brand / Search End -->
@@ -313,16 +319,23 @@
 
     <!-- JavaScript Libraries -->
     <script>
-        function validateSearch() {
-            const keyword = document.getElementById("searchKeyword").value.trim();
-
-            if (keyword === "") {
-                return false;
+            document.addEventListener("DOMContentLoaded", function() {
+        var hash = window.location.hash;
+        if (hash) {
+            var triggerEl = document.querySelector('.nav-pills a[href="' + hash + '"]');
+            if (triggerEl) {
+                triggerEl.click();
             }
-
-            return true;
         }
-    </script>
+
+        var tabLinks = document.querySelectorAll('.nav-pills a');
+        tabLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                window.location.hash = this.getAttribute('href');
+            });
+        });
+    });
+</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/home/wow/wow.min.js"></script>
@@ -330,5 +343,6 @@
 
     <!-- Template Javascript -->
     <script src="~/js/home/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
