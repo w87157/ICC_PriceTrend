@@ -37,15 +37,11 @@
         </div>
     </div>
     <!-- Spinner End -->
-    <!-- ========================================================= -->
-    <!-- Fixed Header Start -->
-    <!-- ========================================================= -->
-    <div class="fixed-top bg-white shadow-sm" style="z-index: 1030;">
 
-        <!-- Brand / Search Start -->
+    <!-- Brand / Search Start -->
+    <div class="fixed-top bg-white shadow-sm" style="z-index: 1030;">
         <div class="container-fluid px-5 py-4">
             <div class="row gx-0 align-items-center">
-
                 <!-- Logo -->
                 <div class="col-lg-3 text-center text-lg-start mb-3 mb-lg-0">
                     <a href="/" class="navbar-brand p-0">
@@ -77,82 +73,121 @@
                             </div>
                         </form>
                     </div>
-                </form>
-
-                <div class="mt-2 ms-3">
-                    <small class="text-muted me-2">熱門搜尋：</small>
-                    <a href="~/Search/Index?keyword=iPhone" class="text-muted me-3">iPhone</a>
-                    <a href="~/Search/Index?keyword=RTX" class="text-muted me-3">RTX 顯示卡</a>
-                    <a href="~/Search/Index?keyword=MacBook" class="text-muted me-3">MacBook</a>
-                    <a href="~/Search/Index?keyword=Switch" class="text-muted">Switch 2</a>
                 </div>
-            </div>
-            <!-- 3. 右側功能圖示與會員中心 -->
-            <div class="d-flex align-items-center mb-3 mb-lg-0">
-                @if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    <a href="~/Profile/Index#v-pills-favorites" class="d-inline-flex align-items-center text-muted me-3" title="我的收藏">
-                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fas fa-heart"></i>
-                        </span>
-                    </a>
 
-                    <a href="~/Profile/Index#v-pills-notifications" class="d-inline-flex align-items-center text-muted me-3" title="降價通知">
-                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fas fa-bell"></i>
-                        </span>
-                    </a>
+                <!-- 3. 右側功能圖示與會員中心 -->
+                <div class="col-lg-2 d-flex align-items-center justify-content-center justify-content-lg-end mb-3 mb-lg-0">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a href="~/Profile/Index#v-pills-favorites"
+                           class="d-inline-flex align-items-center text-muted me-3"
+                           title="我的收藏">
+                            <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center"
+                                  style="width: 40px; height: 40px;">
+                                <i class="fas fa-heart"></i>
+                            </span>
+                        </a>
 
-                    <div class="d-flex align-items-center">
-                        <a href="~/Profile/Index" class="d-inline-flex align-items-center text-muted me-2" title="會員中心">
-                            <span class="rounded-circle btn-md-square border bg-primary text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <a href="~/Profile/Index#v-pills-notifications"
+                           class="d-inline-flex align-items-center text-muted me-3"
+                           title="降價通知">
+                            <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center"
+                                  style="width: 40px; height: 40px;">
+                                <i class="fas fa-bell"></i>
+                            </span>
+                        </a>
+
+                        <div class="d-flex align-items-center">
+                            <a href="~/Profile/Index"
+                               class="d-inline-flex align-items-center text-muted me-2"
+                               title="會員中心">
+                                <span class="rounded-circle btn-md-square border bg-primary text-white d-flex align-items-center justify-content-center"
+                                      style="width: 40px; height: 40px;">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </a>
+
+                            <a href="~/Account/Logout"
+                               class="text-danger small text-decoration-none fw-bold"
+                               title="登出">
+                                登出
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <a href="~/Account/Login"
+                           class="d-inline-flex align-items-center text-muted text-decoration-none"
+                           title="登入帳號">
+                            <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center"
+                                  style="width: 40px; height: 40px;">
                                 <i class="fas fa-user"></i>
                             </span>
                         </a>
-                        <a href="~/Account/Logout" class="text-danger small text-decoration-none fw-bold" title="登出">登出</a>
-                    </div>
-                }
-                else
-                {
-                    <a href="~/Account/Login" class="d-inline-flex align-items-center text-muted text-decoration-none" title="登入帳號">
-                        <span class="rounded-circle btn-md-square border d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="fas fa-user"></i>
-                        </span>
-                    </a>
-                }
+                    }
+                </div>
             </div>
-
         </div>
+
+        <!-- Navbar Start -->
+        <div class="container-fluid nav-bar p-0">
+            <div class="row gx-0 bg-primary px-5 align-items-center">
+                <!-- Main Navigation -->
+                <div class="col-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+                        <a href="/" class="navbar-brand d-block d-lg-none">
+                            <h1 class="display-6 text-secondary m-0">
+                                <i class="fas fa-chart-line text-white me-2"></i>
+                                ICC PriceTrend
+                            </h1>
+                        </a>
+
+                        <button class="navbar-toggler ms-auto"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navbarCollapse">
+                            <span class="fa fa-bars fa-1x"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarCollapse">
+                            <div class="navbar-nav ms-auto py-0">
+                                <a href="/" class="nav-item nav-link active"> 首頁 </a>
+                                <a href="#" class="nav-item nav-link"> 商品比價 </a>
+                                <a href="#" class="nav-item nav-link"> 價格趨勢 </a>
+                                <a href="#" class="nav-item nav-link"> 歷史低價 </a>
+
+                                <div class="nav-item dropdown">
+                                    <a href="#"
+                                       class="nav-link dropdown-toggle"
+                                       data-bs-toggle="dropdown">
+                                        探索
+                                    </a>
+
+                                    <div class="dropdown-menu m-0">
+                                        <a href="#" class="dropdown-item">熱門商品</a>
+                                        <a href="#" class="dropdown-item">熱門品牌</a>
+                                        <a href="#" class="dropdown-item">近期降價</a>
+                                        <a href="#" class="dropdown-item">價格排行榜</a>
+                                    </div>
+                                </div>
+
+                                <a href="#" class="nav-item nav-link me-2"> 關於我們 </a>
+                            </div>
+
+                            <a href="#"
+                               class="btn btn-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0">
+                                <i class="fas fa-bell me-2"></i>
+                                設定降價通知
+                            </a>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Navbar End -->
     </div>
     <!-- Brand / Search End -->
-    <!-- Navbar Start -->
-    <div class="container-fluid nav-bar p-0">
-        <div class="row gx-0 bg-primary px-5 align-items-center">
-            <!-- Main Navigation -->
-            <div class="col-12">
-                <nav class="navbar navbar-expand-lg navbar-light bg-primary">
-                    <a href="/" class="navbar-brand d-block d-lg-none">
-                        <h1 class="display-6 text-secondary m-0">
-                            <i class="fas fa-chart-line text-white me-2"></i>
-                            ICC PriceTrend
-                        </h1>
-                    </a>
-                </div>
-
-            </div>
-        </div>
-        <!-- Brand / Search End -->
-
-        <!-- Navigation Bar Start -->
-        <div class="container-fluid nav-bar p-0">
-            <div class="row gx-0 bg-primary" style="height: 62px;">
-                <!-- 導覽列區塊 -->
-            </div>
-        </div>
-        <!-- Navigation Bar End -->
-
-    </div>
-    <!-- Fixed Header End -->
+    
 
     <!-- Header Spacer (避免 Content 被 fixed-top Header 遮擋) -->
     <div style="height: 187px;"></div>
@@ -174,11 +209,16 @@
                         ，保留所有權利。
                     </span>
                 </div>
+
                 <div class="col-md-6 text-center text-md-end text-white">
                     網頁設計：
-                    <a class="border-bottom text-white" href="https://htmlcodex.com">HTML Codex</a>
+                    <a class="border-bottom text-white" href="https://htmlcodex.com">
+                        HTML Codex
+                    </a>
                     ｜ 發行單位：
-                    <a class="border-bottom text-white" href="https://themewagon.com">ThemeWagon</a>
+                    <a class="border-bottom text-white" href="https://themewagon.com">
+                        ThemeWagon
+                    </a>
                 </div>
             </div>
         </div>

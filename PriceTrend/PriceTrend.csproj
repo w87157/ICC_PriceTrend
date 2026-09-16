@@ -7,10 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Crawler\" />
-    <Folder Include="Models\Member\" />
-    <Folder Include="Models\Analytics\" />
-    <Folder Include="Views\Member\" />
+    <Compile Remove="Models\Analytics\**" />
+    <Compile Remove="Models\Crawler\**" />
+    <Compile Remove="Models\Member\**" />
+    <Compile Remove="Views\Member\**" />
+    <Content Remove="Models\Analytics\**" />
+    <Content Remove="Models\Crawler\**" />
+    <Content Remove="Models\Member\**" />
+    <Content Remove="Views\Member\**" />
+    <EmbeddedResource Remove="Models\Analytics\**" />
+    <EmbeddedResource Remove="Models\Crawler\**" />
+    <EmbeddedResource Remove="Models\Member\**" />
+    <EmbeddedResource Remove="Views\Member\**" />
+    <None Remove="Models\Analytics\**" />
+    <None Remove="Models\Crawler\**" />
+    <None Remove="Models\Member\**" />
+    <None Remove="Views\Member\**" />
   </ItemGroup>
 
   <ItemGroup>

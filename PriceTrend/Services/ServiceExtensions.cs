@@ -6,13 +6,9 @@
         {
             services.AddScoped<SearchService>();
 
-            services.AddScoped<CrawlerService>();
-
             services.AddScoped<ComparisonService>();
 
             services.AddScoped<MemberService>();
-
-            services.AddScoped<AnalyticsService>();
 
             return services;
         }

@@ -1,3 +1,9 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
 
 /*** Spinner Start ***/
 /*** Spinner ***/
@@ -865,5 +871,6 @@
 .copyright {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     background: var(--bs-primary) !important;
+    margin-bottom: 0 !important;
 }
 /*** copyright end ***/
