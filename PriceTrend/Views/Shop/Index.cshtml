@@ -430,14 +430,22 @@
 
                                         @if (!string.IsNullOrWhiteSpace(item.MainImageUrl))
                                         {
-                                            <img src="@item.MainImageUrl"
-                                                 class="img-fluid w-100"
-                                                 alt="@item.ItemName">
+                                            <a asp-controller="Product"
+                                                   asp-action="Single"
+                                                   asp-route-id="@item.ItemGuid">
+                                                <img src="@item.MainImageUrl"
+                                                     class="img-fluid w-100"
+                                                     alt="@item.ItemName">
+                                            </a>
                                         }
 
                                         <div class="text-center p-4">
                                             <h5>
+                                                <a asp-controller="Product"
+                                                   asp-action="Single"
+                                                   asp-route-id="@item.ItemGuid">
                                                 @item.ItemName
+                                                </a>
                                             </h5>
 
                                             @if (!string.IsNullOrWhiteSpace(item.Brand))
