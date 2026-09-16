@@ -1,0 +1,90 @@
+﻿@model PriceTrend.Models.Product.ProductDetailViewModel
+    <!-- Single Products Start -->
+    <div class="container-fluid shop py-5">
+        <div class="container py-5">
+            <div class="row g-4">
+
+                <div class="col-lg-7 col-xl-9 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="row g-4 single-product">
+                        <div class="col-xl-6">
+                            <div class="single-carousel owl-carousel">
+                                <div class="single-item">
+                                    <div class="single-inner bg-light rounded">
+                                        <img src="@Model.MainImageUrl"
+                                             class="img-fluid rounded"
+                                             alt="@Model.ItemName">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <h4 class="fw-bold mb-3">
+                                @Model.ItemName
+                            </h4>
+                            <p class="text-muted mb-1">
+                                品牌：@Model.Brand
+                            </p>
+                            <p class="text-muted">
+                                型號：@Model.Model
+                            </p>
+                        </div>
+                        <div class="col-lg-12">
+                            <h3 class="mb-4">
+                                各平台價格比較
+                            </h3>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>平台</th>
+                                            <th>價格</th>
+                                            <th>商品連結</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach(var price in Model.Prices)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @price.PlatformName
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                NT$ @price.Price
+                                            </td>
+                                            <td>
+                                                <a href="@price.ItemUrl" target="_blank" class="btn btn-primary border border-secondary rounded-pill px-4 py-2">
+                                                    前往賣場
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Single Products End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="lib/lightbox/js/lightbox.min.js"></script>
+
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+</html>

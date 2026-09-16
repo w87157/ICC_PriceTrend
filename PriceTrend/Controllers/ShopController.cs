@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PriceTrend.Services;
+using System.Linq;
 
 namespace PriceTrend.Controllers
 {
@@ -12,11 +13,44 @@ namespace PriceTrend.Controllers
             _searchService = searchService;
         }
 
-        public IActionResult Index(string? keyword)
+        public IActionResult Index(string? keyword, string? sort, int page=1)
         {
+            int pageSize = 20;
+
             var products = _searchService.Search(keyword);
 
-            return View(products);
+            // 價格排序
+            switch (sort)
+            {
+                case "price_asc":
+                    products = products
+                        .OrderBy(x => decimal.TryParse(x.LowestPrice, out var p) ? p:
+                        decimal.MaxValue)
+                        .ToList();
+                    break;
+                case "price_desc":
+                    products = products
+                        .OrderByDescending(x => decimal.TryParse(x.LowestPrice, out var p) ? p : 0)
+                        .ToList();
+                    break;
+            }
+
+            int totalCount = products.Count;
+
+            var pageProducts = products
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.CurrentPage = page;
+
+            ViewBag.TotalPages =
+                (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            ViewBag.Keyword = keyword;
+            ViewBag.Sort = sort;
+
+            return View(pageProducts);
         }
     }
 }

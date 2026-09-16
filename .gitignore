@@ -59,3 +59,8 @@ bower_components/
 appsettings.Development.json
 appsettings.Production.json
 *.env
+
+__pycache__/
+*.pyc
+
+data/
