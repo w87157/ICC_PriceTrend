@@ -8,7 +8,7 @@ import sys
 import time
 from pathlib import Path
 import csv
-from pandas import pd 
+import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -78,7 +78,10 @@ def crawl_ruten():
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(options=chrome_options)
 
+    RESTART_INTERVAL = 200
+    page_counter = 0
     results = []
+    
 
     with open(INPUT_CSV, "r", encoding="utf-8-sig") as f_read:
         reader = csv.DictReader(f_read)
@@ -157,8 +160,38 @@ def crawl_ruten():
 
                 except Exception:
                     continue
-
             del products
+            
+            try:
+                next_btn = driver.find_element(By.CSS_SELECTOR, "a.pager-next")
+                if "is-disabled" in next_btn.get_attribute("class"):
+                    break
+                next_btn.click()
+                WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.product-item"))
+                )
+                time.sleep(2)  
+            except:
+                continue
+            page_counter += 1
+            
+            if page_counter % RESTART_INTERVAL == 0:
+                current_url = driver.current_url
+
+                driver.quit()
+                
+                driver = webdriver.Chrome(options=chrome_options)
+                driver.get(current_url)
+                
+                
+                try:
+                    WebDriverWait(driver, 10).until(
+                        EC.presence_of_all_elements_located(
+                            (By.CSS_SELECTOR, "div.product-item")
+                            )
+                    )
+                except:
+                    continue
 
     driver.quit()
     return results
@@ -181,7 +214,7 @@ def main():
         return
     
     # 去除重複商品
-    df = df.drop_duplicates(subset=["link"]).reset_index(drop=True)
+    df = df.drop_duplicates(subset=["url"]).reset_index(drop=True)
     print(f"去除重複後剩下 {len(df)} 筆商品")
     
     df.to_csv("coupang_products.csv", index=False, encoding="utf-8-sig")
