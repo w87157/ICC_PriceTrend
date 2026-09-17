@@ -228,13 +228,6 @@ def is_same_product(product1, product2):
     if not match_specs(product1, product2):
         return False
 
-    # ---------------------------------------------------------
-    # 6. 顏色
-    # ---------------------------------------------------------
-
-    if not match_color(product1, product2):
-        return False
-
     return True
 
 
@@ -287,10 +280,7 @@ def calculate_similarity(product1, product2):
     score = 0
     total = 0
 
-    # ---------------------------------------------------------
     # 品牌
-    # ---------------------------------------------------------
-
     brand1 = get_value(product1, "brand")
     brand2 = get_value(product2, "brand")
 
@@ -300,10 +290,7 @@ def calculate_similarity(product1, product2):
         if brand1.upper() == brand2.upper():
             score += 1
 
-    # ---------------------------------------------------------
     # 系列
-    # ---------------------------------------------------------
-
     series1 = get_value(product1, "series")
     series2 = get_value(product2, "series")
 
@@ -313,10 +300,7 @@ def calculate_similarity(product1, product2):
         if series1.upper() == series2.upper():
             score += 1
 
-    # ---------------------------------------------------------
     # Model
-    # ---------------------------------------------------------
-
     model1 = get_value(product1, "model")
     model2 = get_value(product2, "model")
 
@@ -326,10 +310,7 @@ def calculate_similarity(product1, product2):
         if model1.upper() == model2.upper():
             score += 1
 
-    # ---------------------------------------------------------
     # 商品類型
-    # ---------------------------------------------------------
-
     type1 = get_value(product1, "product_type")
     type2 = get_value(product2, "product_type")
 
@@ -339,10 +320,7 @@ def calculate_similarity(product1, product2):
         if type1 == type2:
             score += 1
 
-    # ---------------------------------------------------------
     # 螢幕尺寸
-    # ---------------------------------------------------------
-
     size1 = get_value(product1, "screen_size")
     size2 = get_value(product2, "screen_size")
 
@@ -352,10 +330,7 @@ def calculate_similarity(product1, product2):
         if size1 == size2:
             score += 1
 
-    # ---------------------------------------------------------
     # 解析度
-    # ---------------------------------------------------------
-
     resolution1 = get_value(product1, "resolution")
     resolution2 = get_value(product2, "resolution")
 
@@ -365,10 +340,7 @@ def calculate_similarity(product1, product2):
         if resolution1.upper() == resolution2.upper():
             score += 1
 
-    # ---------------------------------------------------------
     # RAM
-    # ---------------------------------------------------------
-
     ram1 = get_value(product1, "ram")
     ram2 = get_value(product2, "ram")
 
@@ -378,10 +350,7 @@ def calculate_similarity(product1, product2):
         if ram1 == ram2:
             score += 1
 
-    # ---------------------------------------------------------
     # 儲存容量
-    # ---------------------------------------------------------
-
     storage1 = get_value(product1, "storage")
     storage2 = get_value(product2, "storage")
 
@@ -391,10 +360,7 @@ def calculate_similarity(product1, product2):
         if storage1 == storage2:
             score += 1
 
-    # ---------------------------------------------------------
     # 沒有可以比較的欄位
-    # ---------------------------------------------------------
-
     if total == 0:
         return 0
 
@@ -466,10 +432,7 @@ def group_products(products):
 
         # 尋找是否已有相同商品群組
         for group in groups:
-            if is_same_product(
-                standard_product,
-                group["standard_product"]
-            ):
+            if is_same_product(standard_product, group["standard_product"]):
                 matched_group = group
                 break
 
