@@ -1,7 +1,9 @@
-﻿namespace PriceTrend.Models.Product
+﻿using System.ComponentModel.DataAnnotations; // 1. 確保有這行
+namespace PriceTrend.Models.Product
 {
     public class Item
     {
+        [Key] // 2. 加上這行
         public Guid ItemGuid { get; set; }
         public Guid CategoryGuid { get; set; }
         public string ItemName { get; set; }
@@ -14,7 +16,6 @@
         public byte Status { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime CreatedAt { get; set; }
-        // Navigation Property
         public Category Category { get; set; }
     }
 }

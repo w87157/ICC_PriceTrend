@@ -1,3 +1,28 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+/* 固定 Header 的預留空間 */
+.header-spacer {
+    height: 187px;
+    flex-shrink: 0;
+}
+
+/* 主要內容區域 */
+.site-content {
+    flex: 1 0 auto;
+    width: 100%;
+}
 
 /*** Spinner Start ***/
 /*** Spinner ***/
@@ -15,18 +40,28 @@
 }
 /*** Spinner End ***/
 
+/*** Back to Top Start ***/
 .back-to-top {
     position: fixed;
     right: 30px;
     bottom: 30px;
-    display: flex;
-    width: 45px;
-    height: 45px;
+    display: none;
     align-items: center;
     justify-content: center;
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 999;
     transition: 0.5s;
-    z-index: 99;
 }
+
+.back-to-top:hover {
+    transform: translateY(-5px);
+}
+/*** Back to Top End ***/
 
 /*** Button Start ***/
 .btn {
@@ -287,7 +322,7 @@
 .page-header {
     position: relative;
     padding: 100px 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(../img/carousel-1.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/lib/home/img/carousel-1.jpg');
     background-position: center top;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -297,13 +332,17 @@
 
 /*** Products Start ***/
 .product .product-item {
-    width: 100%;
     height: 100%;
-    position: relative;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .product .product-item .product-item-inner {
     height: 100%;
+    border: none !important;
+    border-radius: 0 !important;
 }
 
 .product .product-item .product-item-add {
@@ -314,6 +353,10 @@
     opacity: 0;
     transition: 0.5s;
     z-index: 1;
+}
+
+.product .product-item:hover {
+    border: 1px solid #dee2e6;
 }
 
 .product .product-item:hover .product-item-add {
@@ -865,5 +908,6 @@
 .copyright {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     background: var(--bs-primary) !important;
-}
-/*** copyright end ***/
+    flex-shrink: 0;
+    margin-bottom: 0 !important;
+    /*** copyright end ***/

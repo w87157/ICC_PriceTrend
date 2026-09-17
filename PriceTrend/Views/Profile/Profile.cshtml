@@ -1,0 +1,130 @@
+@{
+    ViewData["Title"] = "會員中心";
+    Layout = "_Layout";
+}
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="~/Home/Index">首頁</a>
+                <span class="breadcrumb-item active">會員中心</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Profile Start -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <!-- 側邊選單 -->
+        <div class="col-lg-3 col-md-4 mb-5">
+            <div class="bg-light p-4 mb-30 h-100">
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active bg-primary text-dark font-weight-bold mb-2" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab">
+                        <i class="fas fa-id-card mr-2"></i>個人資料
+                    </a>
+                    <a class="nav-link text-dark font-weight-bold mb-2" id="v-pills-favorites-tab" data-toggle="pill" href="#v-pills-favorites" role="tab">
+                        <i class="fas fa-heart mr-2"></i>商品收藏
+                    </a>
+                    <a class="nav-link text-dark font-weight-bold mb-2" id="v-pills-watchlist-tab" data-toggle="pill" href="#v-pills-watchlist" role="tab">
+                        <i class="fas fa-eye mr-2"></i>追蹤清單 (降價追蹤)
+                    </a>
+                    <a class="nav-link text-dark font-weight-bold mb-2" id="v-pills-search-tab" data-toggle="pill" href="#v-pills-search" role="tab">
+                        <i class="fas fa-history mr-2"></i>搜尋紀錄
+                    </a>
+                    <a class="nav-link text-dark font-weight-bold mb-2" id="v-pills-notifications-tab" data-toggle="pill" href="#v-pills-notifications" role="tab">
+                        <i class="fas fa-bell mr-2"></i>會員通知
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 內容區域 -->
+        <div class="col-lg-9 col-md-8 mb-5">
+            <div class="tab-content bg-light p-30 h-100" id="v-pills-tabContent">
+
+                <!-- 1. 個人資料 Tab -->
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel">
+                    <h4 class="mb-4">個人資料</h4>
+                    <form>
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <label>電子郵件</label>
+                                <input class="form-control" type="email" value="example@email.com" readonly>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label>手機號碼</label>
+                                <input class="form-control" type="text" placeholder="未設定">
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <button type="button" class="btn btn-primary py-2 px-4" onclick="alert('儲存成功！')">儲存變更</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2. 商品收藏 Tab -->
+                <div class="tab-pane fade" id="v-pills-favorites" role="tabpanel">
+                    <h4 class="mb-4">商品收藏</h4>
+                    <p class="text-muted">這裡會顯示您點擊愛心收藏的所有商品清單。</p>
+                </div>
+
+                <!-- 3. 追蹤清單 Tab -->
+                <div class="tab-pane fade" id="v-pills-watchlist" role="tabpanel">
+                    <h4 class="mb-4">追蹤清單與降價通知</h4>
+                    <p class="text-muted">當您追蹤的商品價格低於設定期望值時，系統會自動發送通知。</p>
+                </div>
+
+                <!-- 4. 搜尋紀錄 Tab -->
+                <div class="tab-pane fade" id="v-pills-search" role="tabpanel">
+                    <h4 class="mb-4">搜尋紀錄</h4>
+                    <div class="bg-white p-3 border">
+                        <span class="badge bg-secondary p-2 mr-2">智慧型手機 <i class="fas fa-times ml-1"></i></span>
+                        <span class="badge bg-secondary p-2 mr-2">Apple iPad <i class="fas fa-times ml-1"></i></span>
+                    </div>
+                </div>
+
+                <!-- 5. 會員通知 Tab -->
+                <div class="tab-pane fade" id="v-pills-notifications" role="tabpanel">
+                    <h4 class="mb-4">系統與降價通知</h4>
+                    <div class="list-group">
+                        <div class="list-group-item list-group-item-action">
+                            <h6 class="mb-1 text-primary"><i class="fas fa-tags mr-2"></i>降價通知</h6>
+                            <p class="mb-1 text-muted">您追蹤的商品已降價至 $1,050.00！</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Profile End -->
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 1. 抓取網址後面的錨點 (例如 #v-pills-favorites)
+            var hash = window.location.hash;
+
+            if (hash) {
+                // 2. 尋找左邊選單中 href 等於該錨點的標籤 (<a>)
+                var triggerEl = document.querySelector('.nav-pills a[href="' + hash + '"]');
+
+                if (triggerEl) {
+                    // 3. 模擬使用者點擊該頁籤，Bootstrap 會自動幫我們切換畫面
+                    triggerEl.click();
+                }
+            }
+
+            // (選擇性) 當使用者手動點擊左側選單時，順便更新網址，讓重新整理時不會跑掉
+            var tabLinks = document.querySelectorAll('.nav-pills a');
+            tabLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    window.location.hash = this.getAttribute('href');
+                });
+            });
+        });
+    </script>
+}
