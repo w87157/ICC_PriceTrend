@@ -94,104 +94,112 @@ def crawl_ruten():
                 continue
 
             driver.get(url)
-
-            try:
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_all_elements_located(
-                        (By.CSS_SELECTOR, "div.product-item")
-                    )
-                )
-            except Exception:
-                print(f"商品載入失敗，跳過分類：{category_name}")
-                continue
-
-            for i in range(10):
-                driver.execute_script(
-                    f"window.scrollTo(0, {(i + 1) / 10} * document.body.scrollHeight);"
-                )
-                time.sleep(1)
-
-            products = driver.find_elements(
-                By.CSS_SELECTOR,
-                "div.search-result-container.top-part div.product-item, "
-                "div.search-result-container.bottom-part div.product-item"
-            )
-
-            for product in products:
-                try:
-                    title = product.find_element(
-                        By.CSS_SELECTOR, "p.rt-product-card-name"
-                    ).text.strip()
-
-                    price = product.find_element(
-                        By.CSS_SELECTOR, "div.price-range-container"
-                    ).text.strip()
-
-                    link = product.find_element(
-                        By.CSS_SELECTOR, "a.rt-product-card-name-wrap"
-                    ).get_attribute("href") or ""
-
-                    image_url = ""
-                    try:
-                        image = product.find_element(
-                            By.CSS_SELECTOR, "img.rt-product-card-img"
-                        )
-                        image_url = (
-                            image.get_attribute("src")
-                            or image.get_attribute("data-src")
-                            or ""
-                        )
-                    except Exception:
-                        pass
-
-                    product_id = link.rstrip("/").split("/")[-1].split("?")[0]
-
-                    results.append({
-                        "platform": PLATFORM_NAME,
-                        "platform_item_id": product_id,
-                        "product_name": title,
-                        "price": price,
-                        "url": link,
-                        "image_url": image_url or None,
-                        "category_name": category_name,
-                    })
-
-                    print("  -", title, price, link)
-
-                except Exception:
-                    continue
-            del products
-            
-            try:
-                next_btn = driver.find_element(By.CSS_SELECTOR, "a.pager-next")
-                if "is-disabled" in next_btn.get_attribute("class"):
-                    break
-                next_btn.click()
-                WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.product-item"))
-                )
-                time.sleep(2)  
-            except:
-                continue
-            page_counter += 1
-            
-            if page_counter % RESTART_INTERVAL == 0:
-                current_url = driver.current_url
-
-                driver.quit()
-                
-                driver = webdriver.Chrome(options=chrome_options)
-                driver.get(current_url)
-                
-                
+            retries = 0
+            while True:
                 try:
                     WebDriverWait(driver, 10).until(
                         EC.presence_of_all_elements_located(
                             (By.CSS_SELECTOR, "div.product-item")
-                            )
+                        )
                     )
+                except Exception:
+                    retries += 1
+                    print(f"商品載入失敗，重試第 {retries} 次")
+                    time.sleep(2)
+            
+                    if retries >= 3:
+                        print("商品載入失敗，跳過此分類")
+                        break
+                    else:
+                        continue
+    
+                for i in range(10):
+                    driver.execute_script(
+                        f"window.scrollTo(0, {(i + 1) / 10} * document.body.scrollHeight);"
+                    )
+                    time.sleep(1)
+    
+                products = driver.find_elements(
+                    By.CSS_SELECTOR,
+                    "div.search-result-container.top-part div.product-item, "
+                    "div.search-result-container.bottom-part div.product-item"
+                )
+    
+                for product in products:
+                    try:
+                        title = product.find_element(
+                            By.CSS_SELECTOR, "p.rt-product-card-name"
+                        ).text.strip()
+    
+                        price = product.find_element(
+                            By.CSS_SELECTOR, "div.price-range-container"
+                        ).text.strip()
+    
+                        link = product.find_element(
+                            By.CSS_SELECTOR, "a.rt-product-card-name-wrap"
+                        ).get_attribute("href") or ""
+    
+                        image_url = ""
+                        try:
+                            image = product.find_element(
+                                By.CSS_SELECTOR, "img.rt-product-card-img"
+                            )
+                            image_url = (
+                                image.get_attribute("src")
+                                or image.get_attribute("data-src")
+                                or ""
+                            )
+                        except Exception:
+                            pass
+    
+                        product_id = link.rstrip("/").split("/")[-1].split("?")[0]
+    
+                        results.append({
+                            "platform": PLATFORM_NAME,
+                            "platform_item_id": product_id,
+                            "product_name": title,
+                            "price": price,
+                            "url": link,
+                            "image_url": image_url or None,
+                            "category_name": category_name,
+                        })
+    
+                        print("  -", title, price, link)
+    
+                    except Exception:
+                        continue
+                del products
+                
+                try:
+                    next_btn = driver.find_element(By.CSS_SELECTOR, "a.pager-next")
+                    if "is-disabled" in next_btn.get_attribute("class"):
+                        break
+                    next_btn.click()
+                    WebDriverWait(driver, 10).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR, "div.product-item"))
+                    )
+                    time.sleep(2)  
                 except:
                     continue
+                page_counter += 1
+                
+                if page_counter % RESTART_INTERVAL == 0:
+                    current_url = driver.current_url
+    
+                    driver.quit()
+                    
+                    driver = webdriver.Chrome(options=chrome_options)
+                    driver.get(current_url)
+                    
+                    
+                    try:
+                        WebDriverWait(driver, 10).until(
+                            EC.presence_of_all_elements_located(
+                                (By.CSS_SELECTOR, "div.product-item")
+                                )
+                        )
+                    except:
+                        continue
 
     driver.quit()
     return results
