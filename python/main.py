@@ -72,10 +72,8 @@ def main():
     # =========================================================
     print("\n[4/5] 商品比對與分組")
 
-    product_groups = group_products(
-        analyzed_products
-    )
-
+    product_groups = group_products(analyzed_products)
+    
     print(f"完成分組：{len(product_groups)} 組")
 
     # =========================================================
@@ -83,7 +81,7 @@ def main():
     # =========================================================
     print("\n[5/5] 儲存至 SQL Server")
 
-    save_to_database(product_groups)
+    # save_to_database(product_groups)
 
     print("\n========================================")
     print("        商品資料處理完成")

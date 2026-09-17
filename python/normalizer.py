@@ -139,7 +139,6 @@ def remove_quantity_words(text):
         return ""
 
     for pattern in QUANTITY_PATTERNS:
-
         text = re.sub(
             pattern,
             " ",
@@ -166,7 +165,6 @@ def normalize_brand_names(text):
     )
 
     for brand in brand_list:
-
         text = re.sub(
             re.escape(brand),
             BRAND_ALIASES[brand],

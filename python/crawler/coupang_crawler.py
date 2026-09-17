@@ -1,4 +1,4 @@
-import csv
+import pandas as pd
 import re
 import time
 from pathlib import Path
@@ -26,7 +26,7 @@ BASE_URL = "https://www.tw.coupang.com"
 # =========================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 RAW_DATA_DIR = BASE_DIR / "data" / "raw"
-CSV_FILE_PATH = RAW_DATA_DIR / "coupang.csv"
+CSV_FILE_PATH = RAW_DATA_DIR / "coupang_products.csv"
 
 
 # =========================================================
@@ -162,32 +162,23 @@ def crawl_coupang():
 def save_products_to_csv(products, file_path=CSV_FILE_PATH):
     file_path.parent.mkdir(parents=True, exist_ok=True)
 
-    fieldnames = [
-        "platform",
-        "platform_item_id",
-        "product_name",
-        "price",
-        "url",
-        "image_url",
-        "category_name",
-    ]
+    data = []
 
-    with open(file_path, "w", newline="", encoding="utf-8-sig") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
+    for product in products:
+        data.append(
+            {
+                "platform": product.platform,
+                "platform_item_id": product.platform_item_id,
+                "product_name": product.product_name,
+                "price": product.price,
+                "url": product.url,
+                "image_url": product.image_url,
+                "category_name": product.category_name,
+            }
+        )
 
-        for product in products:
-            writer.writerow(
-                {
-                    "platform": product.platform,
-                    "platform_item_id": product.platform_item_id,
-                    "product_name": product.product_name,
-                    "price": product.price,
-                    "url": product.url,
-                    "image_url": product.image_url,
-                    "category_name": product.category_name,
-                }
-            )
+    df = pd.DataFrame(data)
+    df.to_csv(file_path, index=False, encoding="utf-8-sig")
 
     print(f"CSV 儲存完成：{file_path}")
 
