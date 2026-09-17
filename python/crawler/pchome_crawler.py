@@ -8,15 +8,21 @@ import csv
 import json
 import os
 import random
-import sqlite3  # <-- 新增：匯入內建資料庫套件
 
-# 自動抓取你現在這支 Python 檔案所在的資料夾路徑
+# 取得目前爬蟲檔案所在資料夾
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-INPUT_CSV = os.path.join(BASE_DIR, "分類網頁連結.csv")
-OUTPUT_CSV = os.path.join(BASE_DIR, "pchome商品.csv")
+# 如果爬蟲放在 python/crawler/，則 PROJECT_DIR 會指向 python/
+# 若程式直接放在 python/，則 PROJECT_DIR 會指向目前資料夾
+if os.path.basename(BASE_DIR).lower() == "crawler":
+    PROJECT_DIR = os.path.dirname(BASE_DIR)
+else:
+    PROJECT_DIR = BASE_DIR
+
+# 分類連結放在 python/data/ 下
+INPUT_CSV = os.path.join(PROJECT_DIR, "data", "input", "pchome_category_links.csv")
+OUTPUT_CSV = os.path.join(PROJECT_DIR, "data", "raw", "pchome_raw_products.csv")
 PROGRESS_FILE = os.path.join(BASE_DIR, "pchome_selenium_progress.json")
-DB_NAME = os.path.join(BASE_DIR, "pchome_products.db")  # 強制建立在同一個資料夾
 
 RESTART_INTERVAL = 200          # 累計滾動幾次後，換下一個分類時重啟 Chrome（釋放記憶體）
 MAX_STAGNANT_ROUNDS = 3         # 連續幾輪抓不到新商品就判定該分類已到底
@@ -25,7 +31,7 @@ SCROLL_PAUSE = 1.5
 
 CATEGORY_DELAY = (3.0, 6.0)     # 換分類之間的延遲區間（秒）
 
-FIELDNAMES = ["大類", "小類", "商品ID", "商品名稱", "價格", "連結"]
+FIELDNAMES = ["platform", "platform_item_id", "product_name", "price", "url", "image_url", "category_name"]
 
 FAILED_LOG = "抓取失敗記錄.csv"
 
@@ -39,49 +45,9 @@ def log_failed_category(category_big, category_small, url):
         writer.writerow([category_big, category_small, url])
 
 
-# ----------------------------
-# 資料庫 (SQLite) 操作函式
-# ----------------------------
-def init_db():
-    """初始化資料庫與資料表"""
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    
-    # 建立商品資料表 (若不存在)。設定 product_id 為 PRIMARY KEY，確保商品不重複
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS products (
-            product_id TEXT PRIMARY KEY,
-            category_big TEXT,
-            category_small TEXT,
-            title TEXT,
-            price TEXT,
-            link TEXT,
-            update_time DATETIME DEFAULT (datetime('now', 'localtime'))
-        )
-    ''')
-    conn.commit()
-    conn.close()
-    print(f"📁 資料庫 {DB_NAME} 初始化完成。")
+# 確保 CSV 輸出資料夾存在
+os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 
-def save_to_db(rows):
-    """將抓取的資料存入資料庫"""
-    if not rows:
-        return
-    
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
-    
-    # 使用 INSERT OR REPLACE：如果 product_id 已存在，就更新它的資料（例如最新價格）
-    sql = '''
-        INSERT OR REPLACE INTO products 
-        (category_big, category_small, product_id, title, price, link, update_time)
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
-    '''
-    
-    cursor.executemany(sql, rows)
-    conn.commit()
-    conn.close()
-    
 # ----------------------------
 # Chrome 建立函式
 # ----------------------------
@@ -162,17 +128,26 @@ def findProducts(driver):
         prod_id = link.rstrip("/").split("/")[-1].split("?")[0] if link else ""
 
         title = ""
+        image_url = ""
+
         try:
             title_el = p.find_element(By.CSS_SELECTOR, "h3.c-prodInfoV2__title")
             title = title_el.get_attribute("title") or title_el.text
         except Exception:
             pass
-        if not title:
-            try:
-                img_el = p.find_element(By.CSS_SELECTOR, "div.c-prodInfoV2__img img")
+
+        try:
+            img_el = p.find_element(By.CSS_SELECTOR, "div.c-prodInfoV2__img img")
+            image_url = (
+                img_el.get_attribute("src")
+                or img_el.get_attribute("data-src")
+                or img_el.get_attribute("data-original")
+                or ""
+            )
+            if not title:
                 title = img_el.get_attribute("alt") or ""
-            except Exception:
-                pass
+        except Exception:
+            pass
 
         price = ""
         price_candidates = [
@@ -192,61 +167,77 @@ def findProducts(driver):
                     price_els = p.find_elements(By.CSS_SELECTOR, selector)
                     for el in price_els:
                         raw_text = el.get_attribute("textContent")
-                        
+
                         if raw_text:
-                            clean_text = raw_text.replace("$", "").replace(",", "").replace("起", "").strip()
-                            
+                            clean_text = (
+                                raw_text.replace("$", "")
+                                .replace(",", "")
+                                .replace("起", "")
+                                .strip()
+                            )
+
                             if clean_text.isdigit():
                                 price = clean_text
                                 break
                 except Exception:
                     continue
-                
+
                 if price:
                     break
-            
+
             if price:
                 break
-                
+
             try:
-                driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", p)
-            except:
+                driver.execute_script(
+                    "arguments[0].scrollIntoView({block: 'center'});", p
+                )
+            except Exception:
                 pass
-            
-            time.sleep(0.6) 
+
+            time.sleep(0.6)
 
         if not price:
             try:
                 card_text = p.get_attribute("textContent")
                 if card_text and ("售完" in card_text or "補貨中" in card_text):
                     price = "售完/補貨中"
-            except:
+            except Exception:
                 pass
 
         if link:
-            results.append([prod_id, title, price, link])
+            results.append([prod_id, title, price, link, image_url])
 
     if not results:
         anchors = driver.find_elements(By.CSS_SELECTOR, "a[href*='/prod/']")
         seen_href = set()
+
         for a in anchors:
             link = a.get_attribute("href") or ""
             if not link or link in seen_href:
                 continue
+
             seen_href.add(link)
             prod_id = link.rstrip("/").split("/")[-1].split("?")[0]
             title = a.get_attribute("title") or ""
-            if not title:
-                try:
-                    img_el = a.find_element(By.CSS_SELECTOR, "img")
-                    title = img_el.get_attribute("alt") or ""
-                except Exception:
-                    pass
-            results.append([prod_id, title, "", link])
+            image_url = ""
+
+            try:
+                img_el = a.find_element(By.CSS_SELECTOR, "img")
+                title = title or img_el.get_attribute("alt") or ""
+                image_url = (
+                    img_el.get_attribute("src")
+                    or img_el.get_attribute("data-src")
+                    or img_el.get_attribute("data-original")
+                    or ""
+                )
+            except Exception:
+                pass
+
+            results.append([prod_id, title, "", link, image_url])
 
     del products
     return results
-
 
 # ----------------------------
 # 捲動頁面觸發 lazy-load
@@ -341,11 +332,17 @@ def crawl_one_category(driver, category_big, category_small, url, scroll_counter
         products = findProducts(driver)
         new_products = [p for p in products if p[3] not in seen_links] 
 
-        for prod_id, title, price, link in new_products:
+        for prod_id, title, price, link, image_url in new_products:
             seen_links.add(link)
-            collected_rows.append(
-                [category_big, category_small, prod_id, title, price, link]
-            )
+            collected_rows.append([
+                "PChome",
+                prod_id,
+                title,
+                price,
+                link,
+                image_url,
+                f"{category_big} > {category_small}"
+            ])
 
         del products
 
@@ -385,7 +382,6 @@ if __name__ == "__main__":
 
     # 初始化 CSV 與 SQLite DB
     ensure_csv_header()
-    init_db()  # <-- 新增：確保資料庫被建立
     
     done_keys = load_progress()
 
@@ -420,12 +416,11 @@ if __name__ == "__main__":
 
             # 同時寫入 CSV 與 SQLite DB（雙重備份更安全）
             append_rows(rows)
-            save_to_db(rows)  # <-- 新增：將此分類抓到的商品寫入資料庫
             
             done_keys.add(key)
             save_progress(done_keys)
 
-            print(f"  ✅ 本分類寫入 {len(rows)} 筆 (已存至 CSV 與 資料庫)")
+            print(f"  ✅ 本分類寫入 {len(rows)} 筆 (已存至 CSV)")
 
             if scroll_counter >= RESTART_INTERVAL:
                 print("  [重啟] 重新啟動 Chrome 釋放記憶體...")
@@ -443,4 +438,4 @@ if __name__ == "__main__":
         print(f"\n本次執行結束，還剩 {remaining_after} 個分類尚未抓取。")
         print("重新執行程式即可自動接續。")
     else:
-        print(f"\n✅ 全部完成，已存至 {OUTPUT_CSV} 以及 {DB_NAME} 資料庫！")
+        print(f"\n✅ 全部完成，已存至 {OUTPUT_CSV}！")
